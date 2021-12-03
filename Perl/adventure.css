@@ -1,0 +1,127 @@
+adventure
+{
+    font-family: Times, serif;
+    font-size: 12pt;
+    display: block;
+    color: red;
+    
+}
+
+cmd
+{
+    display: block;
+}
+
+cmd:before
+{
+    content: "Command: " attr(name);
+    display: block;
+    color: black;
+    
+}
+
+code
+{
+    display: block;
+    white-space: pre;
+    color: black;
+    font-family: Courier, monospace;
+    font-size: 9pt;
+}
+
+code:before
+{
+    margin-top: 6pt;
+    content: "Code for " attr(id);
+    font-family: Times, serif;
+    font-size: 12pt;
+}
+
+obj
+{
+    font-family: Times, serif;
+    font-size: 12pt;
+    display: block;
+}
+
+obj:before
+{
+    margin-top: 6pt;
+    content: "Object:  " attr(id) " " attr(adj) "  " attr(name);
+    color: black;
+}
+
+obj > long
+{
+    display: list-item;
+    color: black;
+    list-style-type: disc;
+    list-style-position: outside;
+    margin-left: 0.5in;
+}
+
+obj > short
+{
+    display: list-item;
+    color: black;
+    list-style-type: disc;
+    list-style-position: outside;
+    margin-left: 0.5in;
+}
+
+obj > detail
+{
+    display: list-item;
+    color: black;
+    list-style-type: disc;
+    list-style-position: outside;
+    white-space: pre;
+    margin-left: 0.5in;
+}
+
+loc:before
+{
+    margin-top: 6pt;
+    content: "Location:  " attr(id);
+    color: black;
+}
+
+loc
+{
+    display: list-item;
+    font-family: Times, serif;
+    font-size: 12;
+}
+
+loc > long
+{
+    display: list-item;
+    list-style-type: disc;
+    list-style-position: outside;
+    margin-left: 0.5in;
+    color: black;
+}
+
+loc > short
+{
+    display: list-item;
+    list-style-type: disc;
+    list-style-position: outside;
+    margin-left: 0.5in;
+    color: black;
+}
+
+msg
+{
+    display: block;
+    color: black;
+    margin-left: 0.5in;
+}
+
+msg:before
+{
+    margin-top: 6pt;
+    display: block;
+    content: "Message " attr(id) ":\A";
+    margin-left: -0.5in;
+}

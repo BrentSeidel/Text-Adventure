@@ -1,0 +1,4628 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="adventure.css" type="text/css"?>
+<adventure>
+<!--
+                      File:    adventure.xml
+                      Author:  brent seidel
+
+     This is the XML data file for adventure/symbolic math program.  Note that
+     the XML parser used isn't completely XML compliant.  The primary deficiency
+     is that comments cannot be placed within elements.
+
+     This file contains definitions for the commands, objects, locations, and
+     messages in the game.  The parser will soon be updated to allow code to
+     be included in this file.
+
+M o d i f i c a t i o n   H i s t o r y
+Version      When       Who  What
+V00.01    27-Jul-2001   BBS  Version history started
+V00.02    10-Aug-2001   BBS  Move literal messages in program into message
+                             items in this file.
+V00.03    18-Sep-2001   BBS  Add stylesheet and use &apos; entity.
+  -->
+  <file version="V00.03" title="Adventure/Symbolic Math definitions"/>
+<print text="Defining commands"/>
+  <cmd name="add" func="add"/>
+  <cmd name="close" func="close_obj"/>
+  <cmd name="create" func="create"/>
+  <cmd name="del" func="remove"/>
+  <cmd name="delete" func="remove"/>
+  <cmd name="derive" func="derive"/>
+  <cmd name="down" func="move"/>
+  <cmd name="drink" func="drink"/>
+  <cmd name="drop" func="drop"/>
+  <cmd name="dump" func="dump"/>
+  <cmd name="e" func="move"/>
+  <cmd name="eat" func="eat"/>
+  <cmd name="evaluate" func="evaluate" type="int"/>
+  <cmd name="examine" func="examine"/>
+  <cmd name="exit" func="quit"/>
+  <cmd name="get" func="get"/>
+  <cmd name="go" func="move"/>
+  <cmd name="help" func="help"/>
+  <cmd name="integrate" func="integrate"/>
+  <cmd name="inventory" func="inventory"/>
+  <cmd name="list" func="list"/>
+  <cmd name="look" func="look"/>
+  <cmd name="move" func="move"/>
+  <cmd name="mul" func="multiply"/>
+  <cmd name="multiply" func="multiply"/>
+  <cmd name="n" func="move"/>
+  <cmd name="ne" func="move"/>
+  <cmd name="new" func="create"/>
+  <cmd name="nw" func="move"/>
+  <cmd name="open" func="open_obj"/>
+  <cmd name="product" func="multiply"/>
+  <cmd name="quit" func="quit"/>
+  <cmd name="read" func="examine"/>
+  <cmd name="reload" func="reset_reload"/>
+  <cmd name="reset" func="reset_reload"/>
+  <cmd name="run" func="move"/>
+  <cmd name="s" func="move"/>
+  <cmd name="se" func="move"/>
+  <cmd name="simplify" func="simplify"/>
+  <cmd name="sub" func="subtract"/>
+  <cmd name="sum" func="add"/>
+  <cmd name="sw" func="move"/>
+  <cmd name="take" func="get"/>
+  <cmd name="test" func="test" type="ext"/>
+  <cmd name="turn" func="turn"/>
+  <cmd name="up" func="move"/>
+  <cmd name="w" func="move"/>
+  <cmd name="walk" func="move"/>
+<print text="Defining code objects"/>
+<!-- Note that code objects that are to be used as commands must be defined as
+     all caps since the command parser converts all text to uppercase before trying
+     to execute the command.  Code fragments that are intended to be called by other
+     routines may be in any case.
+  -->
+  <code id="test">
+    my $str = Messages-&gt;get("test-param");
+    my @params = (13, "this is a string");
+
+	printf $str, @params;
+  </code>
+<print text="Defining denizens"/>
+  <denizen id="player1" name="adventurer" loc="start" flags="0x00000000">
+    <short>An adventurer</short>
+    <long>A rather disheveled looking adventurer</long>
+    <footprints>Some fairly human looking footprints</footprints>
+  </denizen>
+<print text="Defining objects"/>
+  <obj id="sword-1" name="sword" adj="coinspinner" flags="0x00000000" value="0"
+       mass="0" capacity="0" power="0" location="8">
+    <long>
+A large sword with a strange mottled pattern on its blade.  On the grip is a 
+depiction of what appears to a pair of dice.
+    </long>
+    <short>A large sword.</short>
+    <detail>
+A large sword with a strange mottled pattern on its blade.  On the grip is a 
+depiction of what appears to a pair of dice.
+    </detail>
+  </obj>
+  <obj id="chalice-1" name="chalice" flags="0x00000000" value="0"
+       mass="0" capacity="0" power="0" location="start">
+    <long>
+A magnificent silver chalice.
+    </long>
+    <short>A silver chalice.</short>
+    <detail>
+A magnificent silver chalice with carvings of ancient battles around it.
+    </detail>
+  </obj>
+  <obj id="scabbard-1" name="scabbard" adj="leather" flags="0x00000000" value="0"
+       mass="0" capacity="0" power="0" location="9">
+    <long>
+An ingeniously worked leather scabbard which would fit a large sword.
+    </long>
+    <short>A leather scabbard.</short>
+    <detail>
+An ingeniously worked leather scabbard which would fit a large sword.
+    </detail>
+  </obj>
+  <obj id="shield-1" name="shield" adj="bronze" flags="0x00000000" value="0"
+        mass="0" capacity="0" power="0" location="6">
+    <long>
+A crude bronze shield embossed to depict forgotten victories.
+    </long>
+    <short>A crude bronze shield.</short>
+    <detail>
+A crude bronze shield embossed to depict forgotten victories.
+    </detail>
+  </obj>
+  <obj id="stake-1" name="stake" adj="wooden" flags="0x00000000" value="0"
+        mass="0" capacity="0" power="0" location="16">
+    <long>
+A piece of wood with one end sharpened and charred where it was fire hardened.
+    </long>
+    <short>A wooden stake.</short>
+    <detail>
+A piece of wood with one end sharpened and charred where it was fire hardened.
+    </detail>
+  </obj>
+  <obj id="book-1" name="book" adj="vogon" flags="0x00000080"
+        value="0" mass="0" capacity="0" power="0" location="house-14">
+    <long>
+A fetid book of Vogon poetry with a health warning on the cover.
+    </long>
+    <short>A book of Vogon poetry.</short>
+    <detail>
+Unfortunately, I am familiar with this particular Vogon dialect and can 
+translate the poetry.  It reads as follows:
+
+        Oh feddled gruntbuggly
+          thy micturations are to me
+        As plurdled gabbleblotchits
+          on a lurgid bee.
+        Groop I implore thee,
+          my foonting turlingdromes.
+        And hooptiously drangle me
+          with crinkly bindlewurdles,
+        Or I will rend the in the gobberwarts
+          with my blurglecruncheon,
+        see if I don&apos;t
+
+          - Prostenic Vogon Jeltz
+
+Don&apos;t say that I didn&apos;t warn you.
+    </detail>
+  </obj>
+  <obj id="door-1" name="door" flags="0x00014801" value="0"
+       mass="0" capacity="0" power="0" location="none">
+    <long>
+With a valiant effort, the door slowly grinds open.  The hinges are loose and 
+the door has to be lifted as it is moved.
+    </long>
+    <short>
+The door is reluctant to move, but with some encouragement it is finally 
+persuaded to close.
+    </short>
+    <detail>
+The door appears to rather rickety and the hinges are loose.  You can see some old
+marks where it was dragged along the floor.
+    </detail>
+  </obj>
+  <obj id="window-1" name="window" flags="0x00014801" value="0"
+       mass="0" capacity="0" power="0" location="none">
+    <long>
+With a great heave, you manage to get the window partly open.  While it is 
+stuck and won&apos;t open any further, it looks like you might be able to squeeze 
+through.
+    </long>
+    <short>
+With a little help, the window comes crashing to a close.
+    </short>
+    <detail>
+The window looks like it might move given suitable encouragement.  It is one of the
+few places on the house where the paint hasn&apos;t pealed.
+    </detail>
+  </obj>
+  <obj id="lid-1" name="sarcophagi" flags="0x00014801" value="0"
+       mass="0" capacity="0" power="0" location="none">
+    <long>
+With much effort, you manage to prop open the lid of the sarcophagi.  Inside, 
+instead of a body or an empty box, you can see some stair descending into the 
+blackness.  A foul stench escapes.  You seem to hear a furtive scampering on 
+the steps as if perhaps something was fleeing the light.
+    </long>
+    <short>
+As you descend the stairs, the lid comes crashing down behind you cutting off
+the light.
+    </short>
+  </obj>
+  <obj id="lid-2" name="lid" flags="0x00014801" value="0"
+       mass="0" capacity="0" power="0" location="none">
+    <long>
+With much effort, you manage to prop open the lid.
+    </long>
+    <short>
+The lid comes crashing down cutting off the smell.
+    </short>
+  </obj>
+  <obj id="lamp" name="lamp" adj="old" flags="0x00020020" value="0"
+       mass="0" capacity="0" power="999" location="house-5">
+    <long>
+A curiously wrought old lamp.  The controls are a little peculiar, but you
+manage to figure them out.
+    </long>
+    <short>An old lamp.</short>
+    <detail>
+The lamp consists of a wrought iron frame containing a standard battery.  Along
+one side is a lever which appears to turn the lamp on and off.  The handle is in
+the shape of some mythological beast.  The other decorations are unrecognizable.
+    </detail>
+  </obj>
+  <!-- 
+Water objects around the stream
+   |-->
+  <obj id="water-16" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="16">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-15" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="15">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-17" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="17">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-18" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="18">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-19" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="19">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-21" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="21">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The water is pouring down from above nearly covering the entrance to the 
+cave.  Enough is splashing around that you could probably get a drink.
+    </detail>
+  </obj>
+  <obj id="water-22" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="stream-1">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-23" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="stream-2">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-24" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="stream-3">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-25" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="stream-4">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-26" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="stream-5">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-27" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="27">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-28" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="28">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-29" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="29">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-30" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="30">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="water-31" name="water" flags="0x00010011" value="0"
+       mass="0" capacity="0" power="0" location="31">
+    <long>water</long>
+    <short>water</short>
+    <detail>
+The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.
+    </detail>
+  </obj>
+  <obj id="bread-82" name="bread" flags="0x00040008" value="0"
+       mass="0" capacity="0" power="0" location="house-10">
+    <long>Some old, dried bread</long>
+    <short>Some bread</short>
+    <detail>
+The bread is old and dried, but no mold is visible.  You could probably
+eat it with no ill effects.
+    </detail>
+  </obj>
+<print text="Defining locations"/>
+  <loc id="start" flags="0x00000300">
+    <exit dir="N"    flags="0x0002"  dest="8"  pass="first-pass"/>
+    <exit dir="NE"   flags="0x0002"  dest="9"  pass="first-pass"/>
+    <exit dir="E"    flags="0x0002"  dest="13" pass="first-pass"/>
+    <exit dir="SE"   flags="0x0002"  dest="18" pass="first-pass"/>
+    <exit dir="S"    flags="0x0002"  dest="17" pass="first-pass"/>
+    <exit dir="SW"   flags="0x0002"  dest="16" pass="first-pass"/>
+    <exit dir="W"    flags="0x0002"  dest="12" pass="first-pass"/>
+    <exit dir="NW"   flags="0x0002"  dest="7"  pass="first-pass"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly,36"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a grassy meadow.  You notice a stream to your south, a 
+small cliff to the west and to the north as well as to the east is what appears 
+to be a forest.  You can  hear the sound of a nearby waterfall.
+    </long>
+    <short>
+You are in the middle of a grassy meadow.
+    </short>
+  </loc>
+  <loc id="1" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="101"/>
+    <exit dir="NE"   flags="0x0000"  dest="102"/>
+    <exit dir="E"    flags="0x0000"  dest="2"/>
+    <exit dir="SE"   flags="0x0000"  dest="7"/>
+    <exit dir="S"    flags="0x0000"  dest="6"/>
+    <exit dir="SW"   flags="0x0000"  closed="14"/>
+    <exit dir="W"    flags="0x0000"  closed="14"/>
+    <exit dir="NW"   flags="0x0000"  closed="14"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You seem to be trying to penetrate some dense brush.  To the west the face of 
+the cliff and to the north the brush gets even denser.  There seems to be a 
+clearing to the south and southeast.  There is forest to the east and north.
+    </long>
+    <short>
+You seem to be trying to penetrate some dense brush.
+    </short>
+  </loc>
+  <loc id="2" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="103"/>
+    <exit dir="NE"   flags="0x0000"  dest="104"/>
+    <exit dir="E"    flags="0x0000"  dest="3"/>
+    <exit dir="SE"   flags="0x0000"  dest="8"/>
+    <exit dir="S"    flags="0x0000"  dest="7"/>
+    <exit dir="SW"   flags="0x0000"  dest="6"/>
+    <exit dir="W"    flags="0x0000"  dest="1"/>
+    <exit dir="NW"   flags="0x0000"  dest="105"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the southern fringes of a large forest.  There is a 
+clearing to the south.
+    </long>
+    <short>
+You appear to be in the southern fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="3" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="106"/>
+    <exit dir="NE"   flags="0x0000"  dest="107"/>
+    <exit dir="E"    flags="0x0000"  dest="4"/>
+    <exit dir="SE"   flags="0x0000"  dest="9"/>
+    <exit dir="S"    flags="0x0000"  dest="8"/>
+    <exit dir="SW"   flags="0x0000"  dest="7"/>
+    <exit dir="W"    flags="0x0000"  dest="2"/>
+    <exit dir="NW"   flags="0x0000"  dest="108"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the southern fringes of a large forest.  There is a 
+clearing to the south.
+    </long>
+    <short>
+You appear to be in the southern fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="4" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="109"/>
+    <exit dir="NE"   flags="0x0000"  dest="58"/>
+    <exit dir="E"    flags="0x0000"  dest="trail-1"/>
+    <exit dir="SE"   flags="0x0000"  dest="trail-1"/>
+    <exit dir="S"    flags="0x0000"  dest="9"/>
+    <exit dir="SW"   flags="0x0000"  dest="8"/>
+    <exit dir="W"    flags="0x0000"  dest="3"/>
+    <exit dir="NW"   flags="0x0000"  dest="101"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the southern fringes of a large forest.  There is a 
+clearing to the south.
+    </long>
+    <short>
+You appear to be in the southern fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="trail-1" flags="0x000000300">
+    <exit dir="N"    flags="0x0000"  dest="58"/>
+    <exit dir="NE"   flags="0x0000"  dest="trail-2"/>
+    <exit dir="E"    flags="0x0000"  dest="66"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="10"/>
+    <exit dir="SW"   flags="0x0000"  dest="9"/>
+    <exit dir="W"    flags="0x0000"  dest="4"/>
+    <exit dir="NW"   flags="0x0000"  dest="102"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are near one end of a trail that runs off to the northeast.  There is 
+forest all around the trail, but it appears to thin out towards the southwest.  
+Perhaps there is a meadow there.
+    </long>
+    <short>
+You are near one end of a trail that runs off to the northeast.
+    </short>
+  </loc>
+  <loc id="6" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="1"/>
+    <exit dir="NE"   flags="0x0000"  dest="2"/>
+    <exit dir="E"    flags="0x0000"  dest="7"/>
+    <exit dir="SE"   flags="0x0000"  dest="12"/>
+    <exit dir="S"    flags="0x0000"  dest="11"/>
+    <exit dir="SW"   flags="0x0000"  closed="14"/>
+    <exit dir="W"    flags="0x0000"  closed="14"/>
+    <exit dir="NW"   flags="0x0000"  closed="14"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the base of a small cliff on the west edge of the meadow.  Travel to 
+the north would be difficult due to some dense brush at the west end of a large 
+forest.
+    </long>
+    <short>
+You are at the base of a small cliff on the west edge of the meadow.
+    </short>
+  </loc>
+  <loc id="7" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="2"/>
+    <exit dir="NE"   flags="0x0000"  dest="3"/>
+    <exit dir="E"    flags="0x0000"  dest="8"/>
+    <exit dir="SE"   flags="0x0000"  dest="start"/>
+    <exit dir="S"    flags="0x0000"  dest="12"/>
+    <exit dir="SW"   flags="0x0000"  dest="11"/>
+    <exit dir="W"    flags="0x0000"  dest="6"/>
+    <exit dir="NW"   flags="0x0000"  dest="1"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+From the northwest corner of a meadow you can see the southern fringes of a 
+large forest just to the north.
+    </long>
+    <short>
+You are in the northwest corner of a meadow.
+    </short>
+  </loc>
+  <loc id="8" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="3"/>
+    <exit dir="NE"   flags="0x0000"  dest="4"/>
+    <exit dir="E"    flags="0x0000"  dest="9"/>
+    <exit dir="SE"   flags="0x0000"  dest="13"/>
+    <exit dir="S"    flags="0x0000"  dest="start"/>
+    <exit dir="SW"   flags="0x0000"  dest="12"/>
+    <exit dir="W"    flags="0x0000"  dest="7"/>
+    <exit dir="NW"   flags="0x0000"  dest="2"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a meadow just to the south of a large forest.
+    </long>
+    <short>
+You are in a meadow just to the south of a large forest.
+    </short>
+  </loc>
+  <loc id="9" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="4"/>
+    <exit dir="NE"   flags="0x0000"  dest="trail-1"/>
+    <exit dir="E"    flags="0x0000"  dest="10"/>
+    <exit dir="SE"   flags="0x0000"  dest="14"/>
+    <exit dir="S"    flags="0x0000"  dest="13"/>
+    <exit dir="SW"   flags="0x0000"  dest="start"/>
+    <exit dir="W"    flags="0x0000"  dest="8"/>
+    <exit dir="NW"   flags="0x0000"  dest="3"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the northeast corner of a meadow.  There appears to be a trail 
+leading off to the northeast.  To the north and west are large forests.
+    </long>
+    <short>
+You are at the northeast corner of a meadow.
+    </short>
+  </loc>
+  <loc id="10" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="trail-1"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="14"/>
+    <exit dir="SW"   flags="0x0000"  dest="13"/>
+    <exit dir="W"    flags="0x0000"  dest="9"/>
+    <exit dir="NW"   flags="0x0000"  dest="trail-1"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the western fringes of a large forest.  There is a clearing 
+to the east.  It sounds like there might be a stream in the vicinity.
+    </long>
+    <short>
+You appear to be in the western fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="11" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="6"/>
+    <exit dir="NE"   flags="0x0000"  dest="7"/>
+    <exit dir="E"    flags="0x0000"  dest="12"/>
+    <exit dir="SE"   flags="0x0000"  dest="16"/>
+    <exit dir="S"    flags="0x0000"  dest="15"/>
+    <exit dir="SW"   flags="0x0000"  closed="14"/>
+    <exit dir="W"    flags="0x0000"  closed="14"/>
+    <exit dir="NW"   flags="0x0000"  closed="14"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the base of a small cliff on the west edge of the meadow.  Travel to 
+the west would be difficult due to the cliff.  You can hear the sound of a
+nearby waterfall.
+    </long>
+    <short>
+You are at the base of a small cliff on the west edge of the meadow.
+    </short>
+  </loc>
+  <loc id="12" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="7"/>
+    <exit dir="NE"   flags="0x0000"  dest="8"/>
+    <exit dir="E"    flags="0x0000"  dest="start"/>
+    <exit dir="SE"   flags="0x0000"  dest="17"/>
+    <exit dir="S"    flags="0x0000"  dest="16"/>
+    <exit dir="SW"   flags="0x0000"  dest="15"/>
+    <exit dir="W"    flags="0x0000"  dest="11"/>
+    <exit dir="NW"   flags="0x0000"  dest="6"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the west side of a meadow.  There is a cliff to the west.  It sounds 
+like there might be a stream to the south.
+    </long>
+    <short>
+You are at the west side of a meadow.
+    </short>
+  </loc>
+  <loc id="13" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="9"/>
+    <exit dir="NE"   flags="0x0000"  dest="10"/>
+    <exit dir="E"    flags="0x0000"  dest="14"/>
+    <exit dir="SE"   flags="0x0000"  dest="19"/>
+    <exit dir="S"    flags="0x0000"  dest="18"/>
+    <exit dir="SW"   flags="0x0000"  dest="17"/>
+    <exit dir="W"    flags="0x0000"  dest="start"/>
+    <exit dir="NW"   flags="0x0000"  dest="8"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the east side of a meadow.  There is a large forest to the east.  
+You can hear the sound of a nearby stream.
+    </long>
+    <short>
+You are at the east side of a meadow.
+    </short>
+  </loc>
+  <loc id="14" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="10"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="19"/>
+    <exit dir="SW"   flags="0x0000"  dest="18"/>
+    <exit dir="W"    flags="0x0000"  dest="13"/>
+    <exit dir="NW"   flags="0x0000"  dest="9"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the western fringes of a large forest.  There is a clearing 
+to the east.  It sounds like there might be a stream in the vicinity.
+    </long>
+    <short>
+You appear to be in the western fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="15" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="11"/>
+    <exit dir="NE"   flags="0x0000"  dest="12"/>
+    <exit dir="E"    flags="0x0000"  dest="16"/>
+    <exit dir="SE"   flags="0x0000"  dest="stream-2"/>
+    <exit dir="S"    flags="0x0000"  dest="stream-1"/>
+    <exit dir="SW"   flags="0x0000"  dest="21"/>
+    <exit dir="W"    flags="0x0000"  closed="14"/>
+    <exit dir="NW"   flags="0x0000"  closed="14"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the edge of a meadow.  To the south, you can see a waterfall coming 
+from the top of the cliff.  There is a sizable pool of water to the base of the 
+falls.  It looks like you could probably crawl behind the falls, though it is 
+unclear what that would accomplish besides soaking you in cold water.  Travel 
+to the west would not be successful due to the presence of a cliff.
+    </long>
+    <short>
+You are at the edge of a meadow near a waterfall.
+    </short>
+  </loc>
+  <loc id="16" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="12"/>
+    <exit dir="NE"   flags="0x0000"  dest="start"/>
+    <exit dir="E"    flags="0x0000"  dest="17"/>
+    <exit dir="SE"   flags="0x0000"  dest="stream-3"/>
+    <exit dir="S"    flags="0x0000"  dest="stream-2"/>
+    <exit dir="SW"   flags="0x0000"  dest="stream-1"/>
+    <exit dir="W"    flags="0x0000"  dest="15"/>
+    <exit dir="NW"   flags="0x0000"  dest="11"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are on the north shore of a pool of water.  There is a small waterfall 
+entering the pool from the west.  A stream exits the pool to the east.  There 
+are some rocks on this side that would be suitable to sit on and perhaps eat a 
+lunch.  All in all, this seems to be a rather pleasant spot.
+    </long>
+    <short>
+You are on the north shore of a pool of water.
+    </short>
+  </loc>
+  <loc id="17" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="start"/>
+    <exit dir="NE"   flags="0x0000"  dest="13"/>
+    <exit dir="E"    flags="0x0000"  dest="18"/>
+    <exit dir="SE"   flags="0x0000"  dest="stream-4"/>
+    <exit dir="S"    flags="0x0000"  dest="stream-3"/>
+    <exit dir="SW"   flags="0x0000"  dest="stream-2"/>
+    <exit dir="W"    flags="0x0000"  dest="16"/>
+    <exit dir="NW"   flags="0x0000"  dest="12"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the east end of a pool of water where it exits into a stream.  You 
+can see a waterfall emptying into the west end of the pool.  There are some 
+rocks in the water here and it looks like you could cross the stream on the 
+rocks.  There are some blackberry bushes to the east
+    </long>
+    <short>
+You are at the east end of a pool of water.
+    </short>
+  </loc>
+  <loc id="18" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="13"/>
+    <exit dir="NE"   flags="0x0000"  dest="14"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  dest="stream-5"/>
+    <exit dir="S"    flags="0x0000"  dest="stream-4"/>
+    <exit dir="SW"   flags="0x0000"  dest="stream-3"/>
+    <exit dir="W"    flags="0x0000"  dest="17"/>
+    <exit dir="NW"   flags="0x0000"  dest="start"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a tangle of blackberry bushes.  Travel to the east 
+would be impossible.  It might be able to escape to the west or north with only 
+a few scratches.
+    </long>
+    <short>
+You are in the middle of a tangle of blackberry bushes.
+    </short>
+  </loc>
+  <loc id="19" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="14"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="stream-5"/>
+    <exit dir="SW"   flags="0x0000"  dest="stream-4"/>
+    <exit dir="W"    flags="0x0000"  dest="18"/>
+    <exit dir="NW"   flags="0x0000"  dest="13"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a tangle of blackberry bushes.  Travel to the east or 
+west would be impossible.  It might be able to escape to the north with only a 
+few scratches.
+    </long>
+    <short>
+You are in the middle of a tangle of blackberry bushes.
+    </short>
+  </loc>
+  <loc id="cave-1" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="21"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You appear to be in the entrance of a cave.  Unfortunately, due to the general 
+lack of illumination, you cannot tell how far back the cave goes, but you may 
+be able to travel some distance to the west.  On the other hand, you might fall 
+into a pit and die.  To the east you can see water streaming over the mouth of 
+the cave.
+    </long>
+    <short>
+You appear to be in the entrance of a cave.
+    </short>
+  </loc>
+  <loc id="21" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  dest="15"/>
+    <exit dir="E"    flags="0x0000"  dest="stream-1"/>
+    <exit dir="SE"   flags="0x0000"  dest="27"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="cave-1"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a space behind the waterfall.  It looks like you could go to the 
+northeast or southeast without getting too soaked.  There also appears to be a 
+small cave to the west.
+    </long>
+    <short>
+You are in a space behind the waterfall.
+    </short>
+  </loc>
+  <loc id="stream-1" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You have unwisely tried to use the waterfall as a shower.  Unfortunately, it 
+has a somewhat greater volume of water than the showers that you more 
+customarily use.  The impact seems to have killed you.
+    </long>
+    <short>
+You have unwisely tried to use the waterfall as a shower.  Unfortunately, it 
+has a somewhat greater volume of water than the showers that you more 
+customarily use.  The impact seems to have killed you.
+    </short>
+  </loc>
+  <loc id="stream-2" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="16"/>
+    <exit dir="NE"   flags="0x0000"  dest="17"/>
+    <exit dir="E"    flags="0x0000"  dest="stream-3"/>
+    <exit dir="SE"   flags="0x0000"  dest="29"/>
+    <exit dir="S"    flags="0x0000"  dest="28"/>
+    <exit dir="SW"   flags="0x0000"  dest="27"/>
+    <exit dir="W"    flags="0x0000"  dest="stream-1"/>
+    <exit dir="NW"   flags="0x0000"  dest="15"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="try-swim"/>
+    <long>
+You are in a pool of water that is filled by a waterfall at the west end.  A 
+stream flows out of the east end.
+    </long>
+    <short>
+You are in a pool of water that is filled by a waterfall at the west end.
+    </short>
+  </loc>
+  <loc id="stream-3" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="17"/>
+    <exit dir="NE"   flags="0x0000"  dest="18"/>
+    <exit dir="E"    flags="0x0000"  dest="stream-4"/>
+    <exit dir="SE"   flags="0x0000"  dest="30"/>
+    <exit dir="S"    flags="0x0000"  dest="29"/>
+    <exit dir="SW"   flags="0x0000"  dest="28"/>
+    <exit dir="W"    flags="0x0000"  dest="stream-2"/>
+    <exit dir="NW"   flags="0x0000"  dest="16"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="try-swim"/>
+    <long>
+You are standing in the middle of an east-west stream.  There is a pool of 
+water filled by a waterfall to the west.  The stream continues to the east.
+    </long>
+    <short>
+You are standing in the middle of an east-west stream.
+    </short>
+  </loc>
+  <loc id="stream-4" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="18"/>
+    <exit dir="NE"   flags="0x0000"  dest="19"/>
+    <exit dir="E"    flags="0x0000"  dest="stream-5"/>
+    <exit dir="SE"   flags="0x0000"  dest="31"/>
+    <exit dir="S"    flags="0x0000"  dest="30"/>
+    <exit dir="SW"   flags="0x0000"  dest="29"/>
+    <exit dir="W"    flags="0x0000"  dest="stream-3"/>
+    <exit dir="NW"   flags="0x0000"  dest="17"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="try-swim"/>
+    <long>
+You are in the middle of an east-west stream.  There are a bunch of blackberry 
+bushes on the south bank and a meadow on the north.
+    </long>
+    <short>
+You are in the middle of an east-west stream.
+    </short>
+  </loc>
+  <loc id="stream-5" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="19"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="31"/>
+    <exit dir="SW"   flags="0x0000"  dest="30"/>
+    <exit dir="W"    flags="0x0000"  dest="stream-4"/>
+    <exit dir="NW"   flags="0x0000"  dest="18"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="try-swim"/>
+    <long>
+You are in the middle of an east-west stream.  There are a bunch of blackberry 
+bushes on the south bank and a meadow on the north.
+    </long>
+    <short>
+You are in the middle of an east-west stream.
+    </short>
+  </loc>
+  <loc id="27" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="stream-1"/>
+    <exit dir="NE"   flags="0x0000"  dest="stream-2"/>
+    <exit dir="E"    flags="0x0000"  dest="28"/>
+    <exit dir="SE"   flags="0x0000"  dest="33"/>
+    <exit dir="S"    flags="0x0000"  dest="32"/>
+    <exit dir="SW"   flags="0x0000"  closed="14"/>
+    <exit dir="W"    flags="0x0000"  closed="14"/>
+    <exit dir="NW"   flags="0x0000"  dest="21"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+To the north, you can see a waterfall coming from the top of the cliff.  There 
+is a sizable pool of water to the base of the falls.  It looks like you could 
+probably crawl behind the falls, though it is unclear what that would 
+accomplish besides soaking you in cold water.  Travel to the west would be 
+difficult due to a cliff.  There are some dense bushes to the south.
+    </long>
+    <short>
+You are south of the waterfall.
+    </short>
+  </loc>
+  <loc id="28" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="stream-2"/>
+    <exit dir="NE"   flags="0x0000"  dest="stream-3"/>
+    <exit dir="E"    flags="0x0000"  dest="29"/>
+    <exit dir="SE"   flags="0x0000"  dest="34"/>
+    <exit dir="S"    flags="0x0000"  dest="33"/>
+    <exit dir="SW"   flags="0x0000"  dest="32"/>
+    <exit dir="W"    flags="0x0000"  dest="27"/>
+    <exit dir="NW"   flags="0x0000"  dest="stream-1"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are on the south side of a pool at the base of a waterfall.  To the north 
+of the pool, you can see a meadow.  Further to the south, there is some 
+impenetrable underbrush.
+    </long>
+    <short>
+You are on the south side of a pool at the base of a waterfall.
+    </short>
+  </loc>
+  <loc id="29" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="stream-3"/>
+    <exit dir="NE"   flags="0x0000"  dest="stream-4"/>
+    <exit dir="E"    flags="0x0000"  dest="30"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="34"/>
+    <exit dir="SW"   flags="0x0000"  dest="33"/>
+    <exit dir="W"    flags="0x0000"  dest="28"/>
+    <exit dir="NW"   flags="0x0000"  dest="stream-2"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are on the south bank of a stream.  The a pool filled by a waterfall is to 
+the northwest.  To the south are some thorn bushes.  The bushes to the east are 
+blackberries and at least will have some good fruit when they are ripe.
+    </long>
+    <short>
+You are on the south bank of a stream.
+    </short>
+  </loc>
+  <loc id="30" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="stream-4"/>
+    <exit dir="NE"   flags="0x0000"  dest="stream-5"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="29"/>
+    <exit dir="NW"   flags="0x0000"  dest="stream-3"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You have entered a clump of blackberries to the south of a stream.  
+Unfortunately, none are ripe at this time.  Perhaps if you try again later in 
+the year you will have better luck.  It looks like you can escape to the west.
+    </long>
+    <short>
+You have entered a clump of blackberries to the south of a stream.
+    </short>
+  </loc>
+  <loc id="31" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="stream-5"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  dest="stream-4"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You have entered a clump of blackberries to the south of a stream.  
+Unfortunately, none are ripe at this time.  Perhaps if you try again later in 
+the year you will have better luck.  It looks like you can escape to the west.
+    </long>
+    <short>
+You have entered a clump of blackberries to the south of a stream.
+    </short>
+  </loc>
+  <loc id="32" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="27"/>
+    <exit dir="NE"   flags="0x0000"  dest="28"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="14"/>
+    <exit dir="W"    flags="0x0000"  closed="14"/>
+    <exit dir="NW"   flags="0x0000"  closed="14"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You have tangled yourself in some dense brush near the waterfall.  The only 
+route of escape seems to be to the north.
+    </long>
+    <short>
+You have tangled yourself in some dense brush near the waterfall.
+    </short>
+  </loc>
+  <loc id="33" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="28"/>
+    <exit dir="NE"   flags="0x0000"  dest="29"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  dest="27"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are trying to penetrate some impenetrable underbrush.  You can however go 
+to the north.
+    </long>
+    <short>
+You are trying to penetrate some impenetrable underbrush.
+    </short>
+  </loc>
+  <loc id="34" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="29"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  dest="28"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a tangle of thorn bushes.  Unfortunately, these will bear no edible 
+fruit at any time during their life-cycle.  It looks like it would be possible 
+to exit to the north or northwest.
+    </long>
+    <short>
+You are in a tangle of thorn bushes.
+    </short>
+  </loc>
+  <loc id="35" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="35"/>
+    <exit dir="NE"   flags="0x0000"  dest="70"/>
+    <exit dir="E"    flags="0x0000"  dest="36"/>
+    <exit dir="SE"   flags="0x0000"  dest="138"/>
+    <exit dir="S"    flags="0x0000"  dest="137"/>
+    <exit dir="SW"   flags="0x0000"  dest="133"/>
+    <exit dir="W"    flags="0x0000"  dest="130"/>
+    <exit dir="NW"   flags="0x0000"  dest="67"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the north fringes of a large forest.  It looks like there is some 
+clearing to the north.
+    </long>
+    <short>
+You are in the north fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="36" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="70"/>
+    <exit dir="NE"   flags="0x0000"  dest="71"/>
+    <exit dir="E"    flags="0x0000"  dest="63"/>
+    <exit dir="SE"   flags="0x0000"  dest="139"/>
+    <exit dir="S"    flags="0x0000"  dest="138"/>
+    <exit dir="SW"   flags="0x0000"  dest="137"/>
+    <exit dir="W"    flags="0x0000"  dest="35"/>
+    <exit dir="NW"   flags="0x0000"  dest="69"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the north fringes of a large forest.  It looks like there is some 
+clearing to the north.
+    </long>
+    <short>
+You are in the north fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="37" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="110"/>
+    <exit dir="NE"   flags="0x0000"  dest="111"/>
+    <exit dir="E"    flags="0x0000"  dest="38"/>
+    <exit dir="SE"   flags="0x0000"  dest="road-3"/>
+    <exit dir="S"    flags="0x0000"  dest="44"/>
+    <exit dir="SW"   flags="0x0000"  dest="43"/>
+    <exit dir="W"    flags="0x0000"  dest="112"/>
+    <exit dir="NW"   flags="0x0000"  dest="113"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  There appears to be some clearing to the southeast.
+    </long>
+    <short>
+You are in a large forest.
+    </short>
+  </loc>
+  <loc id="38" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="118"/>
+    <exit dir="NE"   flags="0x0000"  dest="119"/>
+    <exit dir="E"    flags="0x0000"  dest="39"/>
+    <exit dir="SE"   flags="0x0000"  dest="road-4"/>
+    <exit dir="S"    flags="0x0000"  dest="road-3"/>
+    <exit dir="SW"   flags="0x0000"  dest="44"/>
+    <exit dir="W"    flags="0x0000"  dest="37"/>
+    <exit dir="NW"   flags="0x0000"  dest="117"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.
+    </long>
+    <short>
+You appear to be in the southern fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="39" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="120"/>
+    <exit dir="NE"   flags="0x0000"  dest="121"/>
+    <exit dir="E"    flags="0x0000"  dest="40"/>
+    <exit dir="SE"   flags="0x0000"  dest="road-5"/>
+    <exit dir="S"    flags="0x0000"  dest="road-4"/>
+    <exit dir="SW"   flags="0x0000"  dest="road-3"/>
+    <exit dir="W"    flags="0x0000"  dest="38"/>
+    <exit dir="NW"   flags="0x0000"  dest="122"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.
+    </long>
+    <short>
+You appear to be in the southern fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="40" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="123"/>
+    <exit dir="NE"   flags="0x0000"  dest="124"/>
+    <exit dir="E"    flags="0x0000"  dest="41"/>
+    <exit dir="SE"   flags="0x0000"  dest="road-6"/>
+    <exit dir="S"    flags="0x0000"  dest="road-5"/>
+    <exit dir="SW"   flags="0x0000"  dest="road-3"/>
+    <exit dir="W"    flags="0x0000"  dest="39"/>
+    <exit dir="NW"   flags="0x0000"  dest="125"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.
+    </long>
+    <short>
+You appear to be in the southern fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="41" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="126"/>
+    <exit dir="NE"   flags="0x0000"  dest="127"/>
+    <exit dir="E"    flags="0x0000"  dest="42"/>
+    <exit dir="SE"   flags="0x0000"  dest="road-7"/>
+    <exit dir="S"    flags="0x0000"  dest="road-6"/>
+    <exit dir="SW"   flags="0x0000"  dest="road-5"/>
+    <exit dir="W"    flags="0x0000"  dest="40"/>
+    <exit dir="NW"   flags="0x0000"  dest="119"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.
+    </long>
+    <short>
+You appear to be in the southern fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="42" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="120"/>
+    <exit dir="NE"   flags="0x0000"  dest="121"/>
+    <exit dir="E"    flags="0x0000"  dest="122"/>
+    <exit dir="SE"   flags="0x0000"  dest="123"/>
+    <exit dir="S"    flags="0x0000"  dest="road-7"/>
+    <exit dir="SW"   flags="0x0000"  dest="road-6"/>
+    <exit dir="W"    flags="0x0000"  dest="41"/>
+    <exit dir="NW"   flags="0x0000"  dest="124"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.
+    </long>
+    <short>
+You appear to be in the southern fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="43" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="114"/>
+    <exit dir="NE"   flags="0x0000"  dest="37"/>
+    <exit dir="E"    flags="0x0000"  dest="44"/>
+    <exit dir="SE"   flags="0x0000"  dest="road-2"/>
+    <exit dir="S"    flags="0x0000"  dest="51"/>
+    <exit dir="SW"   flags="0x0000"  dest="50"/>
+    <exit dir="W"    flags="0x0000"  dest="115"/>
+    <exit dir="NW"   flags="0x0000"  dest="116"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  There appears to be some clearing to the southeast.
+    </long>
+    <short>
+You are in a large forest.
+    </short>
+  </loc>
+  <loc id="44" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="37"/>
+    <exit dir="NE"   flags="0x0000"  dest="38"/>
+    <exit dir="E"    flags="0x0000"  dest="road-3"/>
+    <exit dir="SE"   flags="0x0000"  dest="road-2"/>
+    <exit dir="S"    flags="0x0000"  dest="road-2"/>
+    <exit dir="SW"   flags="0x0000"  dest="51"/>
+    <exit dir="W"    flags="0x0000"  dest="43"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  There appears to be a clearing for a road to the 
+southeast.
+    </long>
+    <short>
+You are in a large forest.
+    </short>
+  </loc>
+  <loc id="road-3" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="38"/>
+    <exit dir="NE"   flags="0x0000"  dest="39"/>
+    <exit dir="E"    flags="0x0000"  dest="road-4"/>
+    <exit dir="SE"   flags="0x0000"  dest="54"/>
+    <exit dir="S"    flags="0x0000"  dest="53"/>
+    <exit dir="SW"   flags="0x0000"  dest="road-2"/>
+    <exit dir="W"    flags="0x0000"  dest="44"/>
+    <exit dir="NW"   flags="0x0000"  dest="37"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are on a road in a forest.  The road appears to exit the forest to the 
+east.  The road also goes deeper into the forest to the southwest.
+    </long>
+    <short>
+You are on a road in a forest.
+    </short>
+  </loc>
+  <loc id="road-4" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="39"/>
+    <exit dir="NE"   flags="0x0000"  dest="40"/>
+    <exit dir="E"    flags="0x0000"  dest="road-5"/>
+    <exit dir="SE"   flags="0x0000"  dest="55"/>
+    <exit dir="S"    flags="0x0000"  dest="54"/>
+    <exit dir="SW"   flags="0x0000"  dest="53"/>
+    <exit dir="W"    flags="0x0000"  dest="road-3"/>
+    <exit dir="NW"   flags="0x0000"  dest="38"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are on a road at the north edge a clearing.  The road continues to the 
+east.  The road also enters the forest to the west.
+    </long>
+    <short>
+You are on a road at the north edge a clearing.
+    </short>
+  </loc>
+  <loc id="road-5" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="40"/>
+    <exit dir="NE"   flags="0x0000"  dest="41"/>
+    <exit dir="E"    flags="0x0000"  dest="road-6"/>
+    <exit dir="SE"   flags="0x0000"  dest="56"/>
+    <exit dir="S"    flags="0x0000"  dest="55"/>
+    <exit dir="SW"   flags="0x0000"  dest="54"/>
+    <exit dir="W"    flags="0x0000"  dest="road-4"/>
+    <exit dir="NW"   flags="0x0000"  dest="39"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are on a east-west road at the north edge a clearing.  To the south is what 
+appears to be an abandoned house.
+    </long>
+    <short>
+You are on a east-west road at the north edge a clearing.
+    </short>
+  </loc>
+  <loc id="road-6" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="41"/>
+    <exit dir="NE"   flags="0x0000"  dest="42"/>
+    <exit dir="E"    flags="0x0000"  dest="road-7"/>
+    <exit dir="SE"   flags="0x0000"  dest="57"/>
+    <exit dir="S"    flags="0x0000"  dest="56"/>
+    <exit dir="SW"   flags="0x0000"  dest="55"/>
+    <exit dir="W"    flags="0x0000"  dest="road-5"/>
+    <exit dir="NW"   flags="0x0000"  dest="40"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are on a east-west road at the north edge a clearing.  The road also enters 
+the forest to the east.
+    </long>
+    <short>
+You are on a east-west road at the north edge a clearing.
+    </short>
+  </loc>
+  <loc id="road-7" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="42"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  dest="146"/>
+    <exit dir="S"    flags="0x0000"  dest="57"/>
+    <exit dir="SW"   flags="0x0000"  dest="56"/>
+    <exit dir="W"    flags="0x0000"  dest="road-6"/>
+    <exit dir="NW"   flags="0x0000"  dest="41"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are on a road in a forest.  To the east, the road ends abruptly in a 
+washout.  The road to the west appears to break out into a clearing.
+    </long>
+    <short>
+You are on a road in a forest.
+    </short>
+  </loc>
+  <loc id="50" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="117"/>
+    <exit dir="NE"   flags="0x0000"  dest="43"/>
+    <exit dir="E"    flags="0x0000"  dest="51"/>
+    <exit dir="SE"   flags="0x0000"  dest="trail-2"/>
+    <exit dir="S"    flags="0x0000"  dest="58"/>
+    <exit dir="SW"   flags="0x0000"  dest="103"/>
+    <exit dir="W"    flags="0x0000"  dest="104"/>
+    <exit dir="NW"   flags="0x0000"  dest="105"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  There appears to be some clearing to the southeast.
+    </long>
+    <short>
+You are in a large forest.
+    </short>
+  </loc>
+  <loc id="51" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="43"/>
+    <exit dir="NE"   flags="0x0000"  dest="44"/>
+    <exit dir="E"    flags="0x0000"  dest="road-2"/>
+    <exit dir="SE"   flags="0x0000"  dest="road-1"/>
+    <exit dir="S"    flags="0x0000"  dest="trail-2"/>
+    <exit dir="SW"   flags="0x0000"  dest="58"/>
+    <exit dir="W"    flags="0x0000"  dest="50"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  There appears to be a clearing for a road to the 
+southeast.
+    </long>
+    <short>
+You are in a large forest.
+    </short>
+  </loc>
+  <loc id="road-2" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="44"/>
+    <exit dir="NE"   flags="0x0000"  dest="road-3"/>
+    <exit dir="E"    flags="0x0000"  dest="53"/>
+    <exit dir="SE"   flags="0x0000"  dest="61"/>
+    <exit dir="S"    flags="0x0000"  dest="road-1"/>
+    <exit dir="SW"   flags="0x0000"  dest="51"/>
+    <exit dir="W"    flags="0x0000"  dest="51"/>
+    <exit dir="NW"   flags="0x0000"  dest="43"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at a bend in a road in a forest.  The road appears to end a little ways 
+to the south.  The road also continues to the northeast.
+    </long>
+    <short>
+You are at a bend in a road in a forest.
+    </short>
+  </loc>
+  <loc id="53" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="road-3"/>
+    <exit dir="NE"   flags="0x0000"  dest="road-4"/>
+    <exit dir="E"    flags="0x0000"  dest="54"/>
+    <exit dir="SE"   flags="0x0000"  dest="62"/>
+    <exit dir="S"    flags="0x0000"  dest="61"/>
+    <exit dir="SW"   flags="0x0000"  dest="road-1"/>
+    <exit dir="W"    flags="0x0000"  dest="road-2"/>
+    <exit dir="NW"   flags="0x0008"  dest="road-2"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a small north pointing finger of forest.  There is a clearing to the 
+east and road to the north and west.  More forest is to the south.
+    </long>
+    <short>
+You are in a small north pointing finger of forest.
+    </short>
+  </loc>
+  <loc id="54" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="road-4"/>
+    <exit dir="NE"   flags="0x0000"  dest="road-5"/>
+    <exit dir="E"    flags="0x0000"  dest="55"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="62"/>
+    <exit dir="SW"   flags="0x0000"  dest="61"/>
+    <exit dir="W"    flags="0x0000"  dest="53"/>
+    <exit dir="NW"   flags="0x0000"  dest="road-3"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the west edge of a clearing to the northwest of an abandoned old 
+house.  There is forest to the west and a road to the north.  The lawn is to 
+the east.
+    </long>
+    <short>
+You are at the west edge of a clearing to the northwest of an abandoned old 
+house.
+    </short>
+  </loc>
+  <loc id="55" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="road-5"/>
+    <exit dir="NE"   flags="0x0000"  dest="road-6"/>
+    <exit dir="E"    flags="0x0000"  dest="56"/>
+    <exit dir="SE"   flags="0x0000"  dest="64"/>
+    <exit dir="S"    flags="0x0000"  dest="house-2" object="door-1"
+          closed="door-closed"/>
+    <exit dir="SW"   flags="0x0000"  dest="62"/>
+    <exit dir="W"    flags="0x0000"  dest="54"/>
+    <exit dir="NW"   flags="0x0000"  dest="road-4"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the lawn in front of an abandoned old house.  There is a road to the 
+north.  From here it doesn&apos;t look like entry would be easy or profitable.  The 
+windows are all boarded up.  The front door is also boarded over.  You could 
+probably break it or one of the windows down if the porch would support your 
+weight.
+    </long>
+    <short>
+You are in the lawn in front of an abandoned old house.
+    </short>
+  </loc>
+  <loc id="56" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="road-6"/>
+    <exit dir="NE"   flags="0x0000"  dest="road-7"/>
+    <exit dir="E"    flags="0x0000"  dest="57"/>
+    <exit dir="SE"   flags="0x0000"  dest="65"/>
+    <exit dir="S"    flags="0x0000"  dest="64"/>
+    <exit dir="SW"   flags="0x0000"  dest="house-3"/>
+    <exit dir="W"    flags="0x0000"  dest="55"/>
+    <exit dir="NW"   flags="0x0000"  dest="road-5"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the clearing to the northeast of an abandoned old house.  The 
+dilapidated garage is to the southwest.  It looks like you might be able to 
+force entry, but it would probably collapse on you if you did.  There is also a 
+road to the north.
+    </long>
+    <short>
+You are in the clearing to the northeast of an abandoned old house.
+    </short>
+  </loc>
+  <loc id="57" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="road-7"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="146"/>
+    <exit dir="SE"   flags="0x0000"  dest="149"/>
+    <exit dir="S"    flags="0x0000"  dest="65"/>
+    <exit dir="SW"   flags="0x0000"  dest="64"/>
+    <exit dir="W"    flags="0x0000"  dest="56"/>
+    <exit dir="NW"   flags="0x0000"  dest="road-6"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the western fringes of a large forest.  There is a clearing to the 
+west and a road to the north.
+    </long>
+    <short>
+You are in the western fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="58" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="50"/>
+    <exit dir="NE"   flags="0x0000"  dest="51"/>
+    <exit dir="E"    flags="0x0000"  dest="trail-2"/>
+    <exit dir="SE"   flags="0x0000"  dest="trail-1"/>
+    <exit dir="S"    flags="0x0000"  dest="trail-1"/>
+    <exit dir="SW"   flags="0x0000"  dest="4"/>
+    <exit dir="W"    flags="0x0000"  dest="106"/>
+    <exit dir="NW"   flags="0x0000"  dest="107"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  There appears to be some clearing to the southeast.
+    </long>
+    <short>
+You are in a large forest.
+    </short>
+  </loc>
+  <loc id="trail-2" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="51"/>
+    <exit dir="NE"   flags="0x0000"  dest="51"/>
+    <exit dir="E"    flags="0x0000"  dest="road-1"/>
+    <exit dir="SE"   flags="0x0000"  dest="67"/>
+    <exit dir="S"    flags="0x0000"  dest="66"/>
+    <exit dir="SW"   flags="0x0000"  dest="trail-1"/>
+    <exit dir="W"    flags="0x0000"  dest="58"/>
+    <exit dir="NW"   flags="0x0000"  dest="50"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are standing on a section of trail through a large forest.  The has a bend 
+here.  It extends to the east and the southwest.  There appears to be some 
+clearing both to the east and to the southwest.
+    </long>
+    <short>
+You are standing on a section of trail through a large forest.
+    </short>
+  </loc>
+  <loc id="road-1" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="road-2"/>
+    <exit dir="NE"   flags="0x0000"  dest="53"/>
+    <exit dir="E"    flags="0x0000"  dest="61"/>
+    <exit dir="SE"   flags="0x0000"  dest="61"/>
+    <exit dir="S"    flags="0x0000"  dest="67"/>
+    <exit dir="SW"   flags="0x0000"  dest="66"/>
+    <exit dir="W"    flags="0x0000"  dest="58"/>
+    <exit dir="NW"   flags="0x0000"  dest="51"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You have reached the end of the road.  There are some old tire tracks where 
+some people have turned around, but the road is starting to be somewhat 
+overgrown.  The road extends to the north.  You can also make out a trail 
+leading off to the west.
+    </long>
+    <short>
+You have reached the end of the road.
+    </short>
+  </loc>
+  <loc id="61" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="53"/>
+    <exit dir="NE"   flags="0x0000"  dest="54"/>
+    <exit dir="E"    flags="0x0000"  dest="62"/>
+    <exit dir="SE"   flags="0x0000"  dest="69"/>
+    <exit dir="S"    flags="0x0000"  dest="67"/>
+    <exit dir="SW"   flags="0x0000"  dest="67"/>
+    <exit dir="W"    flags="0x0000"  dest="road-1"/>
+    <exit dir="NW"   flags="0x0000"  dest="road-2"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a small north pointing finger of forest.  There is a clearing to the 
+east and a road to the west.  More forest is to the north and south.
+    </long>
+    <short>
+You are in a small north pointing finger of forest.
+    </short>
+  </loc>
+  <loc id="62" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="54"/>
+    <exit dir="NE"   flags="0x0000"  dest="55"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  dest="70"/>
+    <exit dir="S"    flags="0x0000"  dest="69"/>
+    <exit dir="SW"   flags="0x0000"  dest="61"/>
+    <exit dir="W"    flags="0x0000"  dest="61"/>
+    <exit dir="NW"   flags="0x0000"  dest="53"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the clearing to the west of an abandoned old house.  There is forest 
+further to the west.  From this angle, you can see no way into the house.  
+There is a small grove of trees to the south.
+    </long>
+    <short>
+You are in the clearing to the west of an abandoned old house.
+    </short>
+  </loc>
+  <loc id="63" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="71"/>
+    <exit dir="NE"   flags="0x0000"  dest="72"/>
+    <exit dir="E"    flags="0x0000"  dest="152"/>
+    <exit dir="SE"   flags="0x0000"  dest="139"/>
+    <exit dir="S"    flags="0x0000"  dest="139"/>
+    <exit dir="SW"   flags="0x0000"  dest="138"/>
+    <exit dir="W"    flags="0x0000"  dest="36"/>
+    <exit dir="NW"   flags="0x0000"  dest="69"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the north fringes of a large forest.  It looks like there is some 
+clearing to the north.
+    </long>
+    <short>
+You are in the north fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="64" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="56"/>
+    <exit dir="NE"   flags="0x0000"  dest="57"/>
+    <exit dir="E"    flags="0x0000"  dest="65"/>
+    <exit dir="SE"   flags="0x0000"  dest="72"/>
+    <exit dir="S"    flags="0x0000"  dest="71"/>
+    <exit dir="SW"   flags="0x0000"  dest="70"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  dest="55"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the clearing to the east of an abandoned old house.  There is forest 
+further to the east.  From this angle, you can see no way into the house.  
+There is also more forest to the south.
+    </long>
+    <short>
+You are in the clearing to the east of an abandoned old house.
+    </short>
+  </loc>
+  <loc id="65" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="57"/>
+    <exit dir="NE"   flags="0x0000"  dest="146"/>
+    <exit dir="E"    flags="0x0000"  dest="149"/>
+    <exit dir="SE"   flags="0x0000"  dest="152"/>
+    <exit dir="S"    flags="0x0000"  dest="72"/>
+    <exit dir="SW"   flags="0x0000"  dest="71"/>
+    <exit dir="W"    flags="0x0000"  dest="64"/>
+    <exit dir="NW"   flags="0x0000"  dest="56"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the western fringes of a large forest.  There is a clearing to the 
+east.
+    </long>
+    <short>
+You are in the western fringes of a large forest.
+    </short>
+  </loc>
+  <loc id="66" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="trail-2"/>
+    <exit dir="NE"   flags="0x0000"  dest="road-1"/>
+    <exit dir="E"    flags="0x0000"  dest="67"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="trail-1"/>
+    <exit dir="NW"   flags="0x0000"  dest="trail-2"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  It looks like there might be a trail to the 
+northeast.
+    </long>
+    <short>
+You are in a large forest.
+northeast.
+    </short>
+  </loc>
+  <loc id="67" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="road-1"/>
+    <exit dir="NE"   flags="0x0000"  dest="61"/>
+    <exit dir="E"    flags="0x0000"  dest="61"/>
+    <exit dir="SE"   flags="0x0000"  dest="35"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="66"/>
+    <exit dir="NW"   flags="0x0000"  dest="trail-2"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  It looks like there might be a road to the north.
+    </long>
+    <short>
+You are in a large forest.
+    </short>
+  </loc>
+  <loc id="crypt-1" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="69"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0001"  dest="crypt-2" object="lid-1"
+          closed="4"/>
+    <long>
+You have entered a small crypt.  There is a stone sarcophagi in the middle of 
+the room.  On the wall of the crypt is a frieze depicting what would seem to be 
+major events from your life.  However, on closer inspection, many of the events 
+depicted seem to be of little significance or accuracy.  It does look like you
+may, with some effort, be able to open the sarcophagi.
+    </long>
+    <short>
+You have entered a small crypt.
+    </short>
+  </loc>
+  <loc id="crypt-2" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="crypt-3"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0001"  dest="crypt-1" object="lid-2"
+          closed="lid-closed"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are at the base of some stairs.  A low passage extends to the west.
+    </long>
+    <short>
+You are at the base of some stairs.
+    </short>
+  </loc>
+  <loc id="crypt-3" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="crypt-2"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="crypt-4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a low passage that extends to the east and west.
+    </long>
+    <short>
+You are in a low east-west passage.
+    </short>
+  </loc>
+  <loc id="crypt-4" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="crypt-3"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="crypt-5"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You have reached a peculiar looking entrance/exit.  There are massive pillars
+on each side with large stone arches between them.  Carved on the pillars are what
+appear to be people lightly dozing.  You can continue to the east or the west.
+    </long>
+    <short>
+You are at the gates of light slumber.
+    </short>
+  </loc>
+  <loc id="crypt-5" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="crypt-4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You have reached a peculiar looking entrance/exit.  There are massive pillars
+on each side with large stone arches between them.  Carved on the pillars are what
+appear to be people lightly dozing.  You can continue to the east or the west.  To
+the south appears to be the entrance to a cave.  You can see some flickering light
+in the cave.
+    </long>
+    <short>
+You are at the gates of light slumber.
+    </short>
+  </loc>
+  <loc id="69" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="62"/>
+    <exit dir="NE"   flags="0x0000"  dest="70"/>
+    <exit dir="E"    flags="0x0000"  dest="70"/>
+    <exit dir="SE"   flags="0x0000"  dest="36"/>
+    <exit dir="S"    flags="0x0000"  dest="35"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="crypt-1"/>
+    <exit dir="NW"   flags="0x0000"  dest="61"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a small grove of trees.  There is a clearing to the east and north.  
+To the south in a large forest.  To the west, you can see the entrance of a 
+small crypt.  Your name and today&apos;s date is inscribed in the plaque by the 
+entrance.  You get the uneasy feeling that someone is trying to play with your 
+mind.
+    </long>
+    <short>
+You are in a small grove of trees.
+    </short>
+  </loc>
+  <loc id="70" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-9" object="window-1"
+          closed="window-closed"/>
+    <exit dir="NE"   flags="0x0000"  dest="64"/>
+    <exit dir="E"    flags="0x0000"  dest="71"/>
+    <exit dir="SE"   flags="0x0000"  dest="63"/>
+    <exit dir="S"    flags="0x0000"  dest="36"/>
+    <exit dir="SW"   flags="0x0000"  dest="35"/>
+    <exit dir="W"    flags="0x0000"  dest="69"/>
+    <exit dir="NW"   flags="0x0000"  dest="62"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are standing behind an abandoned house.  It looks like you might be able to 
+force one of the windows open to enter the house.  To the west is a small grove
+of trees.
+    </long>
+    <short>
+You are standing behind an abandoned house.
+    </short>
+  </loc>
+  <loc id="71" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="64"/>
+    <exit dir="NE"   flags="0x0000"  dest="65"/>
+    <exit dir="E"    flags="0x0000"  dest="72"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="63"/>
+    <exit dir="SW"   flags="0x0000"  dest="36"/>
+    <exit dir="W"    flags="0x0000"  dest="70"/>
+    <exit dir="NW"   flags="0x0000"  dest="70"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the northwest edge of a large forest.  There is clearing both to the 
+north and west.
+    </long>
+    <short>
+You are at the northwest edge of a large forest.
+    </short>
+  </loc>
+  <loc id="72" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="65"/>
+    <exit dir="NE"   flags="0x0000"  dest="149"/>
+    <exit dir="E"    flags="0x0000"  dest="152"/>
+    <exit dir="SE"   flags="0x0000"  dest="152"/>
+    <exit dir="S"    flags="0x0000"  dest="139"/>
+    <exit dir="SW"   flags="0x0000"  dest="63"/>
+    <exit dir="W"    flags="0x0000"  dest="71"/>
+    <exit dir="NW"   flags="0x0000"  dest="64"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a large forest.  You can see the forest thin off to the northwest.
+    </long>
+    <short>
+You are in a large forest.
+    </short>
+  </loc>
+  <loc id="house-1" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="house-4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a small, dusty walk-in closet off the west end of the hall.  The 
+smell of toxic cleaners is especially strong here.
+    </long>
+    <short>
+You are in a small, dusty walk-in closet off the west end of the hall.
+    </short>
+  </loc>
+  <loc id="house-2" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="55" object="door-1"
+          closed="door-closed"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="house-5"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a living room.  Either the former tenants have been long gone, or 
+they have been very careful to avoid disturbing the dust and cobwebs.
+    </long>
+    <short>
+You are in a living room.
+    </short>
+  </loc>
+  <loc id="house-3" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="56"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="house-6"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a garage.  The construction of this part of the house is not quite 
+up to the standard building codes.  In a number of places, you can see light 
+shining throughout the walls and the roof.  There is a door to the south that 
+might lead into the rest of the house.
+    </long>
+    <short>
+You are in a garage.
+    </short>
+  </loc>
+  <loc id="house-4" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-1"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="house-5"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="house-8"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  dest="house-12"/>
+    <exit dir="Down" flags="0x0000"  dest="house-16"/>
+    <long>
+You are at the west end of the hall.  You can see a rickety staircase leading 
+both up and down.
+    </long>
+    <short>
+You are at the west end of the hall.
+    </short>
+  </loc>
+  <loc id="house-5" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-2"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="house-6"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="house-9"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="house-4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the center of an east-west hall.  To the north, you can enter the 
+living room, and to the south, a back room.
+    </long>
+    <short>
+You are at the center of an east-west hall.
+    </short>
+  </loc>
+  <loc id="house-6" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-3"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="house-10"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="house-5"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the east end of the hall.  The garage is to the north, and the 
+kitchen to the south.
+    </long>
+    <short>
+You are at the east end of the hall.
+    </short>
+  </loc>
+  <loc id="house-7" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="house-8"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a closet off of the bedroom.  The bedroom is to the east.
+    </long>
+    <short>
+You are in a closet off of the bedroom.
+    </short>
+  </loc>
+  <loc id="house-8" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  dest="house-7"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the bedroom.  At least, it looks like a bedroom, though the 
+conspicuous absence of a bed might tend to refute this conclusion.  The exit is 
+to the north.  You can also see a closet at the west side of the room.
+    </long>
+    <short>
+You are in the bedroom.
+    </short>
+  </loc>
+  <loc id="house-9" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-5"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="70" object="window-1"
+          closed="window-closed"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a back room.  The door is on the north.  It also looks like you 
+could exit the house through a window here.
+    </long>
+    <short>
+You are in a back room.
+    </short>
+  </loc>
+  <loc id="house-10" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-6"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the kitchen.  There are marks on the floor where some major 
+appliances were removed after the cockroaches had developed an advanced 
+civilization.
+    </long>
+    <short>
+You are in the kitchen.
+    </short>
+  </loc>
+  <loc id="house-11" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="house-13"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a storage room in the attic.  There is not much to see here.
+    </long>
+    <short>
+You are in a storage room in the attic.
+    </short>
+  </loc>
+  <loc id="house-12" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="house-13"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  dest="house-4"/>
+    <long>
+You are at the top of the stairs, in the attic.  You can see a small room to 
+the east.
+    </long>
+    <short>
+You are at the top of the stairs, in the attic.
+    </short>
+  </loc>
+  <loc id="house-13" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-11"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="house-14"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="house-15"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="house-12"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a small room in the attic.  The stairs are to the west.  There are 
+also doors to the north, east, and south.
+    </long>
+    <short>
+You are in a small room in the attic.
+    </short>
+  </loc>
+  <loc id="house-14" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="house-13"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in what appears to be a library.  There are shelves along all of the 
+walls, except for the space occupied by the window and the door.
+    </long>
+    <short>
+You are in a library.
+    </short>
+  </loc>
+  <loc id="house-15" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="house-13"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a bedroom in the attic.
+    </long>
+    <short>
+You are in a bedroom in the attic.
+    </short>
+  </loc>
+  <loc id="88" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="95" closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in large room with a curiously raised tile floor.  The bulk of the room 
+is occupied by several rows of chest high metal cabinets.
+    </long>
+    <short>
+You are in large room with a curiously raised tile floor.
+    </short>
+  </loc>
+  <loc id="house-16" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="house-17"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  dest="house-4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the bottom of the stairs.  You can see a root cellar to the east.
+    </long>
+    <short>
+You are at the bottom of the stairs.
+    </short>
+  </loc>
+  <loc id="house-17" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="house-18"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="house-16"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a root cellar.  It is slightly chilly in here.  You can also smell 
+the typical musty smell associated with root cellars.  There is a workshop to 
+the south.  There also appears to be a small passage to the east.
+    </long>
+    <short>
+You are in a root cellar.
+    </short>
+  </loc>
+  <loc id="house-18" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="house-17"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  dest="92"/>
+    <long>
+You are in a long, low room.  Along the north wall is a rack containing a 
+number of dusty bottles.  Along the south wall is a row of large barrels 
+mounted on low stands.  Each barrel has a spigot near the bottom.  Everything 
+is covered with dust and cobwebs.
+    </long>
+    <short>
+You are in a wine cellar.
+    </short>
+  </loc>
+  <loc id="92" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="93"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"/>
+    <exit dir="Up"   flags="0x0000"  dest="house-18" closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are at the west end of a tunnel below the wine cellar.
+    </long>
+    <short>
+You are at the west end of a tunnel.
+    </short>
+  </loc>
+  <loc id="93" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="94"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0008"  dest="92"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in an east-west tunnel.
+    </long>
+    <short>
+You are in an east-west tunnel.
+    </short>
+  </loc>
+  <loc id="94" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="95"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="99"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="93"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in what appears to be an alchemical laboratory.  In addition to some 
+esoteric instruments of natural philosophy, there are a number of cabalistic 
+inscriptions on the walls.  There is also a chart depicting all the possible 
+combinations of the four elements.
+    </long>
+    <short>
+You are in what appears to be an alchemical laboratory.
+    </short>
+  </loc>
+  <loc id="95" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="88"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="100"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="94"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a curiously furnished room.  Along the walls are several desks each 
+with several strangely curved dark windows.  Mounted higher on the walls are 
+other larger dark windows.  Mounted in the middle of the room is a large 
+crystal map with a number of strange symbols marked on it.  You can see doors 
+to the north, west, and south.
+    </long>
+    <short>
+You are in a curiously furnished room.
+    </short>
+  </loc>
+  <loc id="house-19" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  dest="house-17"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="house-20"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a cluttered workshop.  The floor is covered with shavings and 
+sawdust.  There are some old tools mounted on the workbench.  You can exit to 
+the north.  There is also another room to the east
+    </long>
+    <short>
+You are in a cluttered workshop.
+    </short>
+  </loc>
+  <loc id="house-20" flags="0x00000200">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="house-19"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a crowded storage room.  The air is heavy with the smell of paint, 
+toxic cleaners, and other household hazardous products.  You can find fresher 
+air to the west.
+    </long>
+    <short>
+You are in a crowded storage room.
+    </short>
+  </loc>
+  <loc id="98" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="99"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in what appears to be a large file storage room.  The office is to the 
+east.
+    </long>
+    <short>
+You are in what appears to be a large file storage room.
+    </short>
+  </loc>
+  <loc id="99" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="94"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="98"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in an abandoned office.  The exit is to the north.  There also appears 
+to be another room to the west.
+    </long>
+    <short>
+You are in an abandoned office.
+    </short>
+  </loc>
+  <loc id="100" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="198"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in a curious room.  There is a raised circle in the center of the room, 
+and a small pedestal mounted consol off to one side.  It is unclear just what 
+sort of mystic rites would be performed here.  The door is to the north.
+    </long>
+    <short>
+You are in a curious room.
+    </short>
+  </loc>
+  <loc id="101" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="102"/>
+    <exit dir="NE"   flags="0x0000"  dest="102"/>
+    <exit dir="E"    flags="0x0000"  dest="102"/>
+    <exit dir="SE"   flags="0x0000"  dest="105"/>
+    <exit dir="S"    flags="0x0000"  dest="104"/>
+    <exit dir="SW"   flags="0x0000"  dest="104"/>
+    <exit dir="W"    flags="0x0000"  dest="107"/>
+    <exit dir="NW"   flags="0x0000"  dest="109"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="102" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="103"/>
+    <exit dir="NE"   flags="0x0000"  dest="101"/>
+    <exit dir="E"    flags="0x0000"  dest="103"/>
+    <exit dir="SE"   flags="0x0000"  dest="106"/>
+    <exit dir="S"    flags="0x0000"  dest="105"/>
+    <exit dir="SW"   flags="0x0000"  dest="104"/>
+    <exit dir="W"    flags="0x0000"  dest="101"/>
+    <exit dir="NW"   flags="0x0000"  dest="103"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="103" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="101"/>
+    <exit dir="NE"   flags="0x0000"  dest="118"/>
+    <exit dir="E"    flags="0x0000"  dest="106"/>
+    <exit dir="SE"   flags="0x0000"  dest="106"/>
+    <exit dir="S"    flags="0x0000"  dest="106"/>
+    <exit dir="SW"   flags="0x0000"  dest="105"/>
+    <exit dir="W"    flags="0x0000"  dest="102"/>
+    <exit dir="NW"   flags="0x0000"  dest="102"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="104" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="101"/>
+    <exit dir="NE"   flags="0x0000"  dest="102"/>
+    <exit dir="E"    flags="0x0000"  dest="105"/>
+    <exit dir="SE"   flags="0x0000"  dest="108"/>
+    <exit dir="S"    flags="0x0000"  dest="107"/>
+    <exit dir="SW"   flags="0x0000"  dest="101"/>
+    <exit dir="W"    flags="0x0000"  dest="101"/>
+    <exit dir="NW"   flags="0x0000"  dest="107"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="105" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="102"/>
+    <exit dir="NE"   flags="0x0000"  dest="103"/>
+    <exit dir="E"    flags="0x0000"  dest="106"/>
+    <exit dir="SE"   flags="0x0000"  dest="109"/>
+    <exit dir="S"    flags="0x0000"  dest="108"/>
+    <exit dir="SW"   flags="0x0000"  dest="107"/>
+    <exit dir="W"    flags="0x0000"  dest="104"/>
+    <exit dir="NW"   flags="0x0000"  dest="101"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="106" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="103"/>
+    <exit dir="NE"   flags="0x0000"  dest="109"/>
+    <exit dir="E"    flags="0x0000"  dest="109"/>
+    <exit dir="SE"   flags="0x0000"  dest="103"/>
+    <exit dir="S"    flags="0x0000"  dest="109"/>
+    <exit dir="SW"   flags="0x0000"  dest="108"/>
+    <exit dir="W"    flags="0x0000"  dest="105"/>
+    <exit dir="NW"   flags="0x0000"  dest="102"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="107" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="104"/>
+    <exit dir="NE"   flags="0x0000"  dest="105"/>
+    <exit dir="E"    flags="0x0000"  dest="108"/>
+    <exit dir="SE"   flags="0x0000"  dest="108"/>
+    <exit dir="S"    flags="0x0000"  dest="109"/>
+    <exit dir="SW"   flags="0x0000"  dest="2"/>
+    <exit dir="W"    flags="0x0000"  dest="104"/>
+    <exit dir="NW"   flags="0x0000"  dest="104"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="108" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="105"/>
+    <exit dir="NE"   flags="0x0000"  dest="106"/>
+    <exit dir="E"    flags="0x0000"  dest="109"/>
+    <exit dir="SE"   flags="0x0000"  dest="107"/>
+    <exit dir="S"    flags="0x0000"  dest="107"/>
+    <exit dir="SW"   flags="0x0000"  dest="109"/>
+    <exit dir="W"    flags="0x0000"  dest="107"/>
+    <exit dir="NW"   flags="0x0000"  dest="104"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="109" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="106"/>
+    <exit dir="NE"   flags="0x0000"  dest="106"/>
+    <exit dir="E"    flags="0x0000"  dest="103"/>
+    <exit dir="SE"   flags="0x0000"  dest="4"/>
+    <exit dir="S"    flags="0x0000"  dest="108"/>
+    <exit dir="SW"   flags="0x0000"  dest="108"/>
+    <exit dir="W"    flags="0x0000"  dest="108"/>
+    <exit dir="NW"   flags="0x0000"  dest="105"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="110" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="111"/>
+    <exit dir="NE"   flags="0x0000"  dest="111"/>
+    <exit dir="E"    flags="0x0000"  dest="111"/>
+    <exit dir="SE"   flags="0x0000"  dest="114"/>
+    <exit dir="S"    flags="0x0000"  dest="113"/>
+    <exit dir="SW"   flags="0x0000"  dest="113"/>
+    <exit dir="W"    flags="0x0000"  dest="116"/>
+    <exit dir="NW"   flags="0x0000"  dest="112"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="111" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="112"/>
+    <exit dir="NE"   flags="0x0000"  dest="110"/>
+    <exit dir="E"    flags="0x0000"  dest="112"/>
+    <exit dir="SE"   flags="0x0000"  dest="115"/>
+    <exit dir="S"    flags="0x0000"  dest="114"/>
+    <exit dir="SW"   flags="0x0000"  dest="113"/>
+    <exit dir="W"    flags="0x0000"  dest="110"/>
+    <exit dir="NW"   flags="0x0000"  dest="112"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="112" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="110"/>
+    <exit dir="NE"   flags="0x0000"  dest="119"/>
+    <exit dir="E"    flags="0x0000"  dest="115"/>
+    <exit dir="SE"   flags="0x0000"  dest="115"/>
+    <exit dir="S"    flags="0x0000"  dest="115"/>
+    <exit dir="SW"   flags="0x0000"  dest="114"/>
+    <exit dir="W"    flags="0x0000"  dest="111"/>
+    <exit dir="NW"   flags="0x0000"  dest="111"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="113" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="110"/>
+    <exit dir="NE"   flags="0x0000"  dest="111"/>
+    <exit dir="E"    flags="0x0000"  dest="114"/>
+    <exit dir="SE"   flags="0x0000"  dest="117"/>
+    <exit dir="S"    flags="0x0000"  dest="116"/>
+    <exit dir="SW"   flags="0x0000"  dest="110"/>
+    <exit dir="W"    flags="0x0000"  dest="110"/>
+    <exit dir="NW"   flags="0x0000"  dest="116"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="114" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="111"/>
+    <exit dir="NE"   flags="0x0000"  dest="112"/>
+    <exit dir="E"    flags="0x0000"  dest="115"/>
+    <exit dir="SE"   flags="0x0000"  dest="118"/>
+    <exit dir="S"    flags="0x0000"  dest="117"/>
+    <exit dir="SW"   flags="0x0000"  dest="116"/>
+    <exit dir="W"    flags="0x0000"  dest="113"/>
+    <exit dir="NW"   flags="0x0000"  dest="110"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="115" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="112"/>
+    <exit dir="NE"   flags="0x0000"  dest="118"/>
+    <exit dir="E"    flags="0x0000"  dest="118"/>
+    <exit dir="SE"   flags="0x0000"  dest="112"/>
+    <exit dir="S"    flags="0x0000"  dest="118"/>
+    <exit dir="SW"   flags="0x0000"  dest="117"/>
+    <exit dir="W"    flags="0x0000"  dest="114"/>
+    <exit dir="NW"   flags="0x0000"  dest="111"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="116" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="113"/>
+    <exit dir="NE"   flags="0x0000"  dest="114"/>
+    <exit dir="E"    flags="0x0000"  dest="117"/>
+    <exit dir="SE"   flags="0x0000"  dest="117"/>
+    <exit dir="S"    flags="0x0000"  dest="118"/>
+    <exit dir="SW"   flags="0x0000"  dest="103"/>
+    <exit dir="W"    flags="0x0000"  dest="113"/>
+    <exit dir="NW"   flags="0x0000"  dest="113"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="117" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="114"/>
+    <exit dir="NE"   flags="0x0000"  dest="115"/>
+    <exit dir="E"    flags="0x0000"  dest="118"/>
+    <exit dir="SE"   flags="0x0000"  dest="116"/>
+    <exit dir="S"    flags="0x0000"  dest="116"/>
+    <exit dir="SW"   flags="0x0000"  dest="118"/>
+    <exit dir="W"    flags="0x0000"  dest="116"/>
+    <exit dir="NW"   flags="0x0000"  dest="113"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="118" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="115"/>
+    <exit dir="NE"   flags="0x0000"  dest="115"/>
+    <exit dir="E"    flags="0x0000"  dest="112"/>
+    <exit dir="SE"   flags="0x0000"  dest="37"/>
+    <exit dir="S"    flags="0x0000"  dest="117"/>
+    <exit dir="SW"   flags="0x0000"  dest="117"/>
+    <exit dir="W"    flags="0x0000"  dest="117"/>
+    <exit dir="NW"   flags="0x0000"  dest="114"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="119" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="120"/>
+    <exit dir="NE"   flags="0x0000"  dest="112"/>
+    <exit dir="E"    flags="0x0000"  dest="120"/>
+    <exit dir="SE"   flags="0x0000"  dest="123"/>
+    <exit dir="S"    flags="0x0000"  dest="122"/>
+    <exit dir="SW"   flags="0x0000"  dest="122"/>
+    <exit dir="W"    flags="0x0000"  dest="125"/>
+    <exit dir="NW"   flags="0x0000"  dest="121"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="120" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="121"/>
+    <exit dir="NE"   flags="0x0000"  dest="119"/>
+    <exit dir="E"    flags="0x0000"  dest="121"/>
+    <exit dir="SE"   flags="0x0000"  dest="124"/>
+    <exit dir="S"    flags="0x0000"  dest="123"/>
+    <exit dir="SW"   flags="0x0000"  dest="122"/>
+    <exit dir="W"    flags="0x0000"  dest="119"/>
+    <exit dir="NW"   flags="0x0000"  dest="121"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="121" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="119"/>
+    <exit dir="NE"   flags="0x0000"  dest="110"/>
+    <exit dir="E"    flags="0x0000"  dest="124"/>
+    <exit dir="SE"   flags="0x0000"  dest="124"/>
+    <exit dir="S"    flags="0x0000"  dest="124"/>
+    <exit dir="SW"   flags="0x0000"  dest="123"/>
+    <exit dir="W"    flags="0x0000"  dest="120"/>
+    <exit dir="NW"   flags="0x0000"  dest="120"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="122" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="119"/>
+    <exit dir="NE"   flags="0x0000"  dest="120"/>
+    <exit dir="E"    flags="0x0000"  dest="123"/>
+    <exit dir="SE"   flags="0x0000"  dest="126"/>
+    <exit dir="S"    flags="0x0000"  dest="125"/>
+    <exit dir="SW"   flags="0x0000"  dest="119"/>
+    <exit dir="W"    flags="0x0000"  dest="119"/>
+    <exit dir="NW"   flags="0x0000"  dest="125"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="123" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="120"/>
+    <exit dir="NE"   flags="0x0000"  dest="121"/>
+    <exit dir="E"    flags="0x0000"  dest="124"/>
+    <exit dir="SE"   flags="0x0000"  dest="127"/>
+    <exit dir="S"    flags="0x0000"  dest="126"/>
+    <exit dir="SW"   flags="0x0000"  dest="125"/>
+    <exit dir="W"    flags="0x0000"  dest="122"/>
+    <exit dir="NW"   flags="0x0000"  dest="119"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="124" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="121"/>
+    <exit dir="NE"   flags="0x0000"  dest="127"/>
+    <exit dir="E"    flags="0x0000"  dest="127"/>
+    <exit dir="SE"   flags="0x0000"  dest="121"/>
+    <exit dir="S"    flags="0x0000"  dest="127"/>
+    <exit dir="SW"   flags="0x0000"  dest="126"/>
+    <exit dir="W"    flags="0x0000"  dest="123"/>
+    <exit dir="NW"   flags="0x0000"  dest="120"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="125" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="122"/>
+    <exit dir="NE"   flags="0x0000"  dest="123"/>
+    <exit dir="E"    flags="0x0000"  dest="126"/>
+    <exit dir="SE"   flags="0x0000"  dest="126"/>
+    <exit dir="S"    flags="0x0000"  dest="127"/>
+    <exit dir="SW"   flags="0x0000"  dest="38"/>
+    <exit dir="W"    flags="0x0000"  dest="122"/>
+    <exit dir="NW"   flags="0x0000"  dest="122"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="126" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="123"/>
+    <exit dir="NE"   flags="0x0000"  dest="124"/>
+    <exit dir="E"    flags="0x0000"  dest="127"/>
+    <exit dir="SE"   flags="0x0000"  dest="125"/>
+    <exit dir="S"    flags="0x0000"  dest="125"/>
+    <exit dir="SW"   flags="0x0000"  dest="127"/>
+    <exit dir="W"    flags="0x0000"  dest="125"/>
+    <exit dir="NW"   flags="0x0000"  dest="122"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="127" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="124"/>
+    <exit dir="NE"   flags="0x0000"  dest="124"/>
+    <exit dir="E"    flags="0x0000"  dest="121"/>
+    <exit dir="SE"   flags="0x0000"  dest="42"/>
+    <exit dir="S"    flags="0x0000"  dest="126"/>
+    <exit dir="SW"   flags="0x0000"  dest="126"/>
+    <exit dir="W"    flags="0x0000"  dest="126"/>
+    <exit dir="NW"   flags="0x0000"  dest="123"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="128" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="129"/>
+    <exit dir="NE"   flags="0x0000"  dest="129"/>
+    <exit dir="E"    flags="0x0000"  dest="129"/>
+    <exit dir="SE"   flags="0x0000"  dest="132"/>
+    <exit dir="S"    flags="0x0000"  dest="131"/>
+    <exit dir="SW"   flags="0x0000"  dest="131"/>
+    <exit dir="W"    flags="0x0000"  dest="134"/>
+    <exit dir="NW"   flags="0x0000"  dest="10"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="129" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="130"/>
+    <exit dir="NE"   flags="0x0000"  dest="128"/>
+    <exit dir="E"    flags="0x0000"  dest="130"/>
+    <exit dir="SE"   flags="0x0000"  dest="133"/>
+    <exit dir="S"    flags="0x0000"  dest="132"/>
+    <exit dir="SW"   flags="0x0000"  dest="131"/>
+    <exit dir="W"    flags="0x0000"  dest="128"/>
+    <exit dir="NW"   flags="0x0000"  dest="130"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="130" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="128"/>
+    <exit dir="NE"   flags="0x0000"  dest="35"/>
+    <exit dir="E"    flags="0x0000"  dest="133"/>
+    <exit dir="SE"   flags="0x0000"  dest="133"/>
+    <exit dir="S"    flags="0x0000"  dest="133"/>
+    <exit dir="SW"   flags="0x0000"  dest="132"/>
+    <exit dir="W"    flags="0x0000"  dest="129"/>
+    <exit dir="NW"   flags="0x0000"  dest="129"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="131" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="128"/>
+    <exit dir="NE"   flags="0x0000"  dest="129"/>
+    <exit dir="E"    flags="0x0000"  dest="132"/>
+    <exit dir="SE"   flags="0x0000"  dest="135"/>
+    <exit dir="S"    flags="0x0000"  dest="134"/>
+    <exit dir="SW"   flags="0x0000"  dest="128"/>
+    <exit dir="W"    flags="0x0000"  dest="128"/>
+    <exit dir="NW"   flags="0x0000"  dest="134"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="132" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="129"/>
+    <exit dir="NE"   flags="0x0000"  dest="130"/>
+    <exit dir="E"    flags="0x0000"  dest="133"/>
+    <exit dir="SE"   flags="0x0000"  dest="136"/>
+    <exit dir="S"    flags="0x0000"  dest="135"/>
+    <exit dir="SW"   flags="0x0000"  dest="134"/>
+    <exit dir="W"    flags="0x0000"  dest="131"/>
+    <exit dir="NW"   flags="0x0000"  dest="128"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="133" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="130"/>
+    <exit dir="NE"   flags="0x0000"  dest="136"/>
+    <exit dir="E"    flags="0x0000"  dest="136"/>
+    <exit dir="SE"   flags="0x0000"  dest="130"/>
+    <exit dir="S"    flags="0x0000"  dest="136"/>
+    <exit dir="SW"   flags="0x0000"  dest="135"/>
+    <exit dir="W"    flags="0x0000"  dest="132"/>
+    <exit dir="NW"   flags="0x0000"  dest="129"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="134" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="131"/>
+    <exit dir="NE"   flags="0x0000"  dest="132"/>
+    <exit dir="E"    flags="0x0000"  dest="135"/>
+    <exit dir="SE"   flags="0x0000"  dest="135"/>
+    <exit dir="S"    flags="0x0000"  dest="136"/>
+    <exit dir="SW"   flags="0x0000"  dest="19"/>
+    <exit dir="W"    flags="0x0000"  dest="131"/>
+    <exit dir="NW"   flags="0x0000"  dest="131"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="135" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="132"/>
+    <exit dir="NE"   flags="0x0000"  dest="133"/>
+    <exit dir="E"    flags="0x0000"  dest="136"/>
+    <exit dir="SE"   flags="0x0000"  dest="134"/>
+    <exit dir="S"    flags="0x0000"  dest="134"/>
+    <exit dir="SW"   flags="0x0000"  dest="136"/>
+    <exit dir="W"    flags="0x0000"  dest="134"/>
+    <exit dir="NW"   flags="0x0000"  dest="131"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="136" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="133"/>
+    <exit dir="NE"   flags="0x0000"  dest="133"/>
+    <exit dir="E"    flags="0x0000"  dest="130"/>
+    <exit dir="SE"   flags="0x0000"  dest="137"/>
+    <exit dir="S"    flags="0x0000"  dest="135"/>
+    <exit dir="SW"   flags="0x0000"  dest="135"/>
+    <exit dir="W"    flags="0x0000"  dest="135"/>
+    <exit dir="NW"   flags="0x0000"  dest="132"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="137" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="138"/>
+    <exit dir="NE"   flags="0x0000"  dest="138"/>
+    <exit dir="E"    flags="0x0000"  dest="138"/>
+    <exit dir="SE"   flags="0x0000"  dest="141"/>
+    <exit dir="S"    flags="0x0000"  dest="140"/>
+    <exit dir="SW"   flags="0x0000"  dest="140"/>
+    <exit dir="W"    flags="0x0000"  dest="143"/>
+    <exit dir="NW"   flags="0x0000"  dest="67"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="138" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="139"/>
+    <exit dir="NE"   flags="0x0000"  dest="137"/>
+    <exit dir="E"    flags="0x0000"  dest="139"/>
+    <exit dir="SE"   flags="0x0000"  dest="142"/>
+    <exit dir="S"    flags="0x0000"  dest="141"/>
+    <exit dir="SW"   flags="0x0000"  dest="140"/>
+    <exit dir="W"    flags="0x0000"  dest="137"/>
+    <exit dir="NW"   flags="0x0000"  dest="139"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="139" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="137"/>
+    <exit dir="NE"   flags="0x0000"  dest="63"/>
+    <exit dir="E"    flags="0x0000"  dest="142"/>
+    <exit dir="SE"   flags="0x0000"  dest="142"/>
+    <exit dir="S"    flags="0x0000"  dest="142"/>
+    <exit dir="SW"   flags="0x0000"  dest="141"/>
+    <exit dir="W"    flags="0x0000"  dest="138"/>
+    <exit dir="NW"   flags="0x0000"  dest="138"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="140" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="137"/>
+    <exit dir="NE"   flags="0x0000"  dest="138"/>
+    <exit dir="E"    flags="0x0000"  dest="141"/>
+    <exit dir="SE"   flags="0x0000"  dest="144"/>
+    <exit dir="S"    flags="0x0000"  dest="143"/>
+    <exit dir="SW"   flags="0x0000"  dest="137"/>
+    <exit dir="W"    flags="0x0000"  dest="137"/>
+    <exit dir="NW"   flags="0x0000"  dest="143"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="141" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="138"/>
+    <exit dir="NE"   flags="0x0000"  dest="139"/>
+    <exit dir="E"    flags="0x0000"  dest="142"/>
+    <exit dir="SE"   flags="0x0000"  dest="145"/>
+    <exit dir="S"    flags="0x0000"  dest="144"/>
+    <exit dir="SW"   flags="0x0000"  dest="143"/>
+    <exit dir="W"    flags="0x0000"  dest="140"/>
+    <exit dir="NW"   flags="0x0000"  dest="137"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="142" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="139"/>
+    <exit dir="NE"   flags="0x0000"  dest="145"/>
+    <exit dir="E"    flags="0x0000"  dest="145"/>
+    <exit dir="SE"   flags="0x0000"  dest="139"/>
+    <exit dir="S"    flags="0x0000"  dest="145"/>
+    <exit dir="SW"   flags="0x0000"  dest="144"/>
+    <exit dir="W"    flags="0x0000"  dest="141"/>
+    <exit dir="NW"   flags="0x0000"  dest="138"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="143" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="140"/>
+    <exit dir="NE"   flags="0x0000"  dest="141"/>
+    <exit dir="E"    flags="0x0000"  dest="144"/>
+    <exit dir="SE"   flags="0x0000"  dest="144"/>
+    <exit dir="S"    flags="0x0000"  dest="145"/>
+    <exit dir="SW"   flags="0x0000"  dest="136"/>
+    <exit dir="W"    flags="0x0000"  dest="140"/>
+    <exit dir="NW"   flags="0x0000"  dest="140"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="144" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="141"/>
+    <exit dir="NE"   flags="0x0000"  dest="142"/>
+    <exit dir="E"    flags="0x0000"  dest="145"/>
+    <exit dir="SE"   flags="0x0000"  dest="143"/>
+    <exit dir="S"    flags="0x0000"  dest="143"/>
+    <exit dir="SW"   flags="0x0000"  dest="145"/>
+    <exit dir="W"    flags="0x0000"  dest="143"/>
+    <exit dir="NW"   flags="0x0000"  dest="140"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="145" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="142"/>
+    <exit dir="NE"   flags="0x0000"  dest="142"/>
+    <exit dir="E"    flags="0x0000"  dest="139"/>
+    <exit dir="SE"   flags="0x0000"  dest="154"/>
+    <exit dir="S"    flags="0x0000"  dest="144"/>
+    <exit dir="SW"   flags="0x0000"  dest="144"/>
+    <exit dir="W"    flags="0x0000"  dest="144"/>
+    <exit dir="NW"   flags="0x0000"  dest="141"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="146" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="147"/>
+    <exit dir="NE"   flags="0x0000"  dest="139"/>
+    <exit dir="E"    flags="0x0000"  dest="147"/>
+    <exit dir="SE"   flags="0x0000"  dest="150"/>
+    <exit dir="S"    flags="0x0000"  dest="149"/>
+    <exit dir="SW"   flags="0x0000"  dest="149"/>
+    <exit dir="W"    flags="0x0000"  dest="152"/>
+    <exit dir="NW"   flags="0x0000"  dest="road-7"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="147" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="148"/>
+    <exit dir="NE"   flags="0x0000"  dest="146"/>
+    <exit dir="E"    flags="0x0000"  dest="148"/>
+    <exit dir="SE"   flags="0x0000"  dest="151"/>
+    <exit dir="S"    flags="0x0000"  dest="150"/>
+    <exit dir="SW"   flags="0x0000"  dest="149"/>
+    <exit dir="W"    flags="0x0000"  dest="146"/>
+    <exit dir="NW"   flags="0x0000"  dest="148"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="148" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="146"/>
+    <exit dir="NE"   flags="0x0000"  dest="152"/>
+    <exit dir="E"    flags="0x0000"  dest="151"/>
+    <exit dir="SE"   flags="0x0000"  dest="151"/>
+    <exit dir="S"    flags="0x0000"  dest="151"/>
+    <exit dir="SW"   flags="0x0000"  dest="150"/>
+    <exit dir="W"    flags="0x0000"  dest="147"/>
+    <exit dir="NW"   flags="0x0000"  dest="147"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="149" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="146"/>
+    <exit dir="NE"   flags="0x0000"  dest="147"/>
+    <exit dir="E"    flags="0x0000"  dest="150"/>
+    <exit dir="SE"   flags="0x0000"  dest="153"/>
+    <exit dir="S"    flags="0x0000"  dest="152"/>
+    <exit dir="SW"   flags="0x0000"  dest="146"/>
+    <exit dir="W"    flags="0x0000"  dest="146"/>
+    <exit dir="NW"   flags="0x0000"  dest="152"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="150" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="147"/>
+    <exit dir="NE"   flags="0x0000"  dest="148"/>
+    <exit dir="E"    flags="0x0000"  dest="151"/>
+    <exit dir="SE"   flags="0x0000"  dest="154"/>
+    <exit dir="S"    flags="0x0000"  dest="153"/>
+    <exit dir="SW"   flags="0x0000"  dest="152"/>
+    <exit dir="W"    flags="0x0000"  dest="149"/>
+    <exit dir="NW"   flags="0x0000"  dest="146"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="151" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="148"/>
+    <exit dir="NE"   flags="0x0000"  dest="154"/>
+    <exit dir="E"    flags="0x0000"  dest="154"/>
+    <exit dir="SE"   flags="0x0000"  dest="148"/>
+    <exit dir="S"    flags="0x0000"  dest="154"/>
+    <exit dir="SW"   flags="0x0000"  dest="153"/>
+    <exit dir="W"    flags="0x0000"  dest="150"/>
+    <exit dir="NW"   flags="0x0000"  dest="147"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="152" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="149"/>
+    <exit dir="NE"   flags="0x0000"  dest="150"/>
+    <exit dir="E"    flags="0x0000"  dest="153"/>
+    <exit dir="SE"   flags="0x0000"  dest="153"/>
+    <exit dir="S"    flags="0x0000"  dest="154"/>
+    <exit dir="SW"   flags="0x0000"  dest="72"/>
+    <exit dir="W"    flags="0x0000"  dest="149"/>
+    <exit dir="NW"   flags="0x0000"  dest="149"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="153" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="150"/>
+    <exit dir="NE"   flags="0x0000"  dest="151"/>
+    <exit dir="E"    flags="0x0000"  dest="154"/>
+    <exit dir="SE"   flags="0x0000"  dest="152"/>
+    <exit dir="S"    flags="0x0000"  dest="152"/>
+    <exit dir="SW"   flags="0x0000"  dest="154"/>
+    <exit dir="W"    flags="0x0000"  dest="152"/>
+    <exit dir="NW"   flags="0x0000"  dest="149"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="154" flags="0x00000300">
+    <exit dir="N"    flags="0x0000"  dest="151"/>
+    <exit dir="NE"   flags="0x0000"  dest="151"/>
+    <exit dir="E"    flags="0x0000"  dest="148"/>
+    <exit dir="SE"   flags="0x0000"  dest="145"/>
+    <exit dir="S"    flags="0x0000"  dest="153"/>
+    <exit dir="SW"   flags="0x0000"  dest="153"/>
+    <exit dir="W"    flags="0x0000"  dest="153"/>
+    <exit dir="NW"   flags="0x0000"  dest="150"/>
+    <exit dir="Up"   flags="0x0000"  closed="try-fly"/>
+    <exit dir="Down" flags="0x0000"  closed="36"/>
+    <long>
+You are in the middle of a large forest.  There are trees in all directions.
+    </long>
+    <short>
+You are in the middle of a large forest.
+    </short>
+  </loc>
+  <loc id="155" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="163"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a clear bubble underneath the front of the ship.  There are control 
+here which appear to be for the operation of a nearby weapon turret.  
+Unfortunately, the controls are not clearly labeled so that operation under 
+high stress conditions would probably be difficult.  You can exit to the south.
+    </long>
+    <short>
+You are in a clear bubble with controls for the weapon turret underneath the front
+of the ship.
+    </short>
+  </loc>
+  <loc id="156" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="164"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a tight crawl-way which gives access to many of the sensors mounted 
+on the hull of the ship.  You can exit to the south.
+    </long>
+    <short>
+You are in a tight crawl-way.
+    </short>
+  </loc>
+  <loc id="157" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="158"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the west end of an engineering lab.  There are numerous electronic 
+instruments scattered around on various tables here.
+    </long>
+    <short>
+You are in the west end of an engineering lab.
+    </short>
+  </loc>
+  <loc id="158" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="159"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="166"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="157"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the center of an engineering lab.  There is a door to the south.  To 
+the west, you can see several pieces of electronic test equipment.  To the 
+east, you can see some fabrication machinery.  There is a door to the south.
+    </long>
+    <short>
+You are in the center of an engineering lab.
+    </short>
+  </loc>
+  <loc id="159" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="158"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the east end of an engineering lab.  There is some equipment here 
+for building new machinery.
+    </long>
+    <short>
+You are in the east end of an engineering lab.
+    </short>
+  </loc>
+  <loc id="160" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="168"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+Oh dear.  It seems that this escape pod has already been jettisoned.  As your 
+air rushes out into the vacuum of space, you can faintly hear a claxon 
+starting.  As you loose consciousness, you can dimly see airtight doors 
+slamming shut to seal off this section of the hall.
+    </long>
+    <short>
+Oh dear.  It seems that this escape pod has already been jettisoned.  As your 
+air rushes out into the vacuum of space, you can faintly hear a claxon 
+starting.  As you loose consciousness, you can dimly see airtight doors 
+slamming shut to seal off this section of the hall.
+    </short>
+  </loc>
+  <loc id="161" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="169"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a small room.  There seems to be a complete supply of emergency 
+provisions for any number of possible accidents.  Because of this and the 
+presence of some rudimentary controls, I would deduce that this is indeed an 
+escape pod.  You can leave to the south.
+    </long>
+    <short>
+You are in a small room.
+    </short>
+  </loc>
+  <loc id="162" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  dest="171"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a comfortable office off of the bridge.  Whoever used this office 
+appears to have been somewhat of a neatness freak.  Everything is meticulously 
+tidy.  There are also no superfluous decorations.  You can return to the bridge 
+to the southwest.
+    </long>
+    <short>
+You are in a comfortable office off of the bridge.
+    </short>
+  </loc>
+  <loc id="163" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="155"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="164" closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  dest="172"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall.  It extends to the southwest and to the east 
+with a door to the north.
+    </long>
+    <short>
+You are in a section of the hall.
+    </short>
+  </loc>
+  <loc id="164" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="156"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="165"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="163"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the north.
+    </long>
+    <short>
+You are in a section of the hall.
+    </short>
+  </loc>
+  <loc id="165" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="166"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="175"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="164"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the south.
+    </long>
+    <short>
+You are in a section of the hall.
+    </short>
+  </loc>
+  <loc id="166" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="158"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="167"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="165"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the north.
+    </long>
+    <short>
+You are in a section of the hall.
+    </short>
+  </loc>
+  <loc id="167" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="168"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="177"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="166"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the south.
+    </long>
+    <short>
+You are in a section of the hall.
+    </short>
+  </loc>
+  <loc id="168" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="160"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="169"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="167"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the north.
+    </long>
+    <short>
+You are in a section of the hall.
+    </short>
+  </loc>
+  <loc id="169" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="161"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="170"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="179"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="168"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the north and to the south.
+    </long>
+    <short>
+You are in a section of the hall.
+    </short>
+  </loc>
+  <loc id="170" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="180"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="169"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You at the east end of the hall.  It extends to the west.  There is a door to 
+the south.
+    </long>
+    <short>
+You at the east end of the hall.
+    </short>
+  </loc>
+  <loc id="171" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  dest="162"/>
+    <exit dir="E"    flags="0x0000"  dest="172"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="181"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are at the north side of the bridge.  There is a door to the northeast and 
+one to the east.
+    </long>
+    <short>
+You are at the north side of the bridge.
+    </short>
+  </loc>
+  <loc id="172" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  dest="163"/>
+    <exit dir="E"    flags="0x0000"  dest="173"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="182"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="171"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall.  It extends to the northeast and south.  
+There is a door to the east and to the west.
+    </long>
+    <short>
+You are in a section of the hall.
+    </short>
+  </loc>
+  <loc id="173" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="172"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the tactical control center for this ship.  In the center of the 
+room is a three dimensional situation display with this ship at the center.  
+You can exit to the west.
+    </long>
+    <short>
+You are in the tactical control center for this ship.
+    </short>
+  </loc>
+  <loc id="174" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="175"/>
+    <exit dir="SE"   flags="0x0000"  dest="185"/>
+    <exit dir="S"    flags="0x0000"  dest="184"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the northwest corner of a large room.  In this room are a large 
+number of stasis containers.  Unfortunately, the labels are illegible, so that 
+is in unclear if the contents of the containers are merely perishable or very 
+hazardous-the two types of goods customarily transported in this fashion.
+    </long>
+    <short>
+You are in the northwest corner of a large room.
+    </short>
+  </loc>
+  <loc id="175" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="165"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="185"/>
+    <exit dir="SW"   flags="0x0000"  dest="184"/>
+    <exit dir="W"    flags="0x0000"  dest="174"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the northeast corner of a large room.  In this room are a large 
+number of stasis containers.  Unfortunately, the labels are illegible, so that 
+is in unclear if the contents of the containers are merely perishable or very 
+hazardous-the two types of goods customarily transported in this fashion.  
+There is a door to the north.
+    </long>
+    <short>
+You are in the northeast corner of a large room.
+    </short>
+  </loc>
+  <loc id="176" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="177"/>
+    <exit dir="SE"   flags="0x0000"  dest="187"/>
+    <exit dir="S"    flags="0x0000"  dest="186"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the northwest corner of the main cargo hold.  It appears that most 
+of the cargo has been removed, but scattered around the room are a few damaged 
+containers.
+    </long>
+    <short>
+You are in the northwest corner of the main cargo hold.
+    </short>
+  </loc>
+  <loc id="177" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="167"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="187"/>
+    <exit dir="SW"   flags="0x0000"  dest="186"/>
+    <exit dir="W"    flags="0x0000"  dest="176"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the northeast corner of the main cargo hold.  It appears that most 
+of the cargo has been removed, but scattered around the room are a few damaged 
+containers.  You can see a door to the north.
+    </long>
+    <short>
+You are in the northeast corner of the main cargo hold.
+    </short>
+  </loc>
+  <loc id="178" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="179"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the west end of the main electronic equipment bay.  This end 
+contains the master control computer which directs the other control computers.
+    </long>
+    <short>
+You are in the west end of the main electronic equipment bay.
+    </short>
+  </loc>
+  <loc id="179" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="169"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="178"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the east end of the main electronic equipment bay.  This end 
+contains most of the subsystem control computers.  To the west, you can see the 
+master control computer.  The door is to the north.
+    </long>
+    <short>
+You are in the east end of the main electronic equipment bay.
+    </short>
+  </loc>
+  <loc id="180" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="170"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="207"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="190"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the north end of the engine room.  To the east is access to the 
+number 2 engine.  There is also a door to the north.
+    </long>
+    <short>
+You are in the north end of the engine room.
+    </short>
+  </loc>
+  <loc id="181" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="171"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="182"/>
+    <exit dir="SE"   flags="0x0000"  dest="191"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the south end of the bridge.  The is a door to the east and one to 
+the southeast.
+    </long>
+    <short>
+You are in the south end of the bridge.
+    </short>
+  </loc>
+  <loc id="182" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="172"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="183"/>
+    <exit dir="SE"   flags="0x0000"  dest="192"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="181"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall extending to the north and to the southeast.  
+There are doors to the east and west.
+    </long>
+    <short>
+You are in a section of the hall extending to the north and to the southeast.  
+    </short>
+  </loc>
+  <loc id="183" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="182"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the communication control center.  There is a door to the west.
+    </long>
+    <short>
+You are in the communication control center.
+    </short>
+  </loc>
+  <loc id="184" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="174"/>
+    <exit dir="NE"   flags="0x0000"  dest="175"/>
+    <exit dir="E"    flags="0x0000"  dest="185"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the southwest corner of a large room.  In this room are a large 
+number of stasis containers.  Unfortunately, the labels are illegible, so that 
+is in unclear if the contents of the containers are merely perishable or very 
+hazardous-the two types of goods customarily transported in this fashion.
+    </long>
+    <short>
+You are in the southwest corner of a large room.
+    </short>
+  </loc>
+  <loc id="185" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="175"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="194"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="184"/>
+    <exit dir="NW"   flags="0x0000"  dest="174"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the southeast corner of a large room.  In this room are a large 
+number of stasis containers.  Unfortunately, the labels are illegible, so that 
+is in unclear if the contents of the containers are merely perishable or very 
+hazardous-the two types of goods customarily transported in this fashion.  
+There is a door to the south.
+    </long>
+    <short>
+You are in the southeast corner of a large room.
+    </short>
+  </loc>
+  <loc id="186" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="176"/>
+    <exit dir="NE"   flags="0x0000"  dest="177"/>
+    <exit dir="E"    flags="0x0000"  dest="187"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the southwest corner of the main cargo hold.  It appears that most 
+of the cargo has been removed, but scattered around the room are a few damaged 
+containers.
+    </long>
+    <short>
+You are in the southwest corner of the main cargo hold.
+    </short>
+  </loc>
+  <loc id="187" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="177"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="196"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="186"/>
+    <exit dir="NW"   flags="0x0000"  dest="176"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the southeast corner of the main cargo hold.  It appears that most 
+of the cargo has been removed, but scattered around the room are a few damaged 
+containers.  You can see a door to the south.
+    </long>
+    <short>
+You are in the southeast corner of the main cargo hold.
+    </short>
+  </loc>
+  <loc id="188" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="197"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the main engineering control room.  There is equipment for 
+controlling most of the functions of the ship here.
+    </long>
+    <short>
+You are in the main engineering control room.
+    </short>
+  </loc>
+  <loc id="189" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="198"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a small ready room across the hall from the transporter.  Along the 
+walls are such useful items as weapons and protective clothing.
+    </long>
+    <short>
+You are in a small ready room across the hall from the transporter.
+    </short>
+  </loc>
+  <loc id="190" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="180"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="208"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="199"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the south end of the engine room.  To the east is access to the 
+number 1 engine.  There is also a door to the south.
+    </long>
+    <short>
+You are in the south end of the engine room.
+    </short>
+  </loc>
+  <loc id="191" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  dest="181"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a large, luxuriously decorated office to the southeast of the 
+bridge.  Whoever occupied this office seemed to have a taste for the finer 
+things in life.  There is a door to the northwest.
+    </long>
+    <short>
+You are in a large, luxuriously decorated office.
+    </short>
+  </loc>
+  <loc id="192" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="193"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="200"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  dest="182"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall extending to the northwest and to the east.  
+There is a door to the south.
+    </long>
+    <short>
+You are in a section of the hall extending to the northwest and to the east.  
+    </short>
+  </loc>
+  <loc id="193" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="194"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="201"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="192"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall extending to the east and west.  There is a 
+door to the south.
+    </long>
+    <short>
+You are in a section of the hall extending to the east and west.
+    </short>
+  </loc>
+  <loc id="194" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="185"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="195"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="193"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall extending to the east and west.  There is a 
+door to the north.
+    </long>
+    <short>
+You are in a section of the hall extending to the east and west.
+    </short>
+  </loc>
+  <loc id="195" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="196"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="202"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="194"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall extending to the east and west.  There is a 
+door to the south.
+    </long>
+    <short>
+You are in a section of the hall extending to the east and west.
+    </short>
+  </loc>
+  <loc id="196" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="187"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="197"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="195"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall extending to the east and west.  There is a 
+door to the north.
+    </long>
+    <short>
+You are in a section of the hall extending to the east and west.
+    </short>
+  </loc>
+  <loc id="197" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="188"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="198"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="196"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall extending to the east and west.  There is a 
+door to the north.
+    </long>
+    <short>
+You are in a section of the hall extending to the east and west.
+    </short>
+  </loc>
+  <loc id="198" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="189"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="199"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  dest="206"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="197"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a section of the hall extending to the east and west.  There are 
+doors to the north and south.
+    </long>
+    <short>
+You are in a section of the hall extending to the east and west.
+    </short>
+  </loc>
+  <loc id="199" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="190"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="198"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are at the east end of the hall.  It extends to the west.  There is a door 
+to the north.
+    </long>
+    <short>
+You are at the east end of the hall.
+    </short>
+  </loc>
+  <loc id="200" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="192"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in a small observation dome on top of the ship.  You can exit to the 
+north.
+    </long>
+    <short>
+You are in a small observation dome on top of the ship.
+    </short>
+  </loc>
+  <loc id="201" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="193"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="202"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the living area of one of the ships staterooms.  The room extends to 
+the east.  There is also a door to the north.
+    </long>
+    <short>
+You are in the living area of one of the ships staterooms.
+    </short>
+  </loc>
+  <loc id="202" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="201"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the inner sanctum of the stateroom.  You can exit to the west.
+    </long>
+    <short>
+You are in the inner sanctum of the stateroom.
+    </short>
+  </loc>
+  <loc id="203" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="195"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="204"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in what appears to have been a cafeteria for the crew of this ship.  To 
+the east, you can see the kitchen.  There is a door to the north.
+    </long>
+    <short>
+You are in the cafeteri.
+    </short>
+  </loc>
+  <loc id="204" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  dest="205"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="203"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the kitchen.  There are facilities for preparing all sorts of exotic 
+foods.  The dining are is to the west.  You can also see a walk-in freezer to 
+the east.
+    </long>
+    <short>
+You are in the kitchen.
+    </short>
+  </loc>
+  <loc id="205" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="204"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+It is very cold in here.  Around you, you can see one of the largest ice 
+collections you have ever seen.  Warmer weather is to the west.
+    </long>
+    <short>
+You are in the freezer.
+    </short>
+  </loc>
+  <loc id="206" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  dest="95"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  closed="4"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the transporter room.  There is a raised circle in the center of the 
+room, and a small pedestal mounted consol off to one side.  The door is to the 
+north.
+    </long>
+    <short>
+You are in the transporter room.  There is a raised circle in the center of the 
+room, and a small pedestal mounted consol off to one side.  The door is to the 
+north.
+    </short>
+  </loc>
+  <loc id="207" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="180"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the access area for engine number 2.  The main engine room is to the 
+west.
+    </long>
+    <short>
+You are in the access area for engine number 2.  The main engine room is to the 
+west.
+    </short>
+  </loc>
+  <loc id="208" flags="0x00000b00">
+    <exit dir="N"    flags="0x0000"  closed="4"/>
+    <exit dir="NE"   flags="0x0000"  closed="4"/>
+    <exit dir="E"    flags="0x0000"  closed="4"/>
+    <exit dir="SE"   flags="0x0000"  closed="4"/>
+    <exit dir="S"    flags="0x0000"  closed="4"/>
+    <exit dir="SW"   flags="0x0000"  closed="4"/>
+    <exit dir="W"    flags="0x0000"  dest="190"/>
+    <exit dir="NW"   flags="0x0000"  closed="4"/>
+    <exit dir="Up"   flags="0x0000"  closed="4"/>
+    <exit dir="Down" flags="0x0000"  closed="4"/>
+    <long>
+You are in the access area for engine number 1.  The main engine room is to the 
+west.
+    </long>
+    <short>
+You are in the access area for engine number 1.  The main engine room is to the 
+west.
+    </short>
+  </loc>
+<print text="Defining messages"/>
+  <msg id="start">
+Sitting at your computer to try out some new software, you feel a strange 
+lethargy come over you...  You awake to find yourself laying in the middle of a 
+grassy field (someone seems to appreciate tired cliches).  You can see the sun 
+just beginning to rise over some trees to the (presumably) east.  The early 
+morning quiet begins to be shattered by the songs of birds.  As you get up to 
+take stock of your situation, you notice a stream to your south and a small 
+cliff to the west.  To the north as well as to the east (as you&apos;ve noticed) is 
+what appears to be a forest.  You can also hear the sound of a nearby 
+waterfall.
+  </msg>
+  <msg id="no-find-1">
+I can&apos;t find a %s.
+  </msg>
+  <msg id="no-find-2">
+I can&apos;t find a %s %s.
+  </msg>
+  <msg id="no-switch">
+I can&apos;t switch a %s.
+  </msg>
+  <msg id="turn-1">
+Turning a %s %s.
+  </msg>
+  <msg id="turn-2">
+Turning a %s %s %s.
+  </msg>
+  <msg id="which-name">
+Which %s do you mean?  I found the following:
+  </msg>
+  <msg id="list-name-adj">
+A %s %s
+  </msg>
+  <msg id="dark">
+It&apos;s dark in here.  You are liable to trip and hurt yourself.
+  </msg>
+  <msg id="immobile">
+You are unable to pick up the %s
+  </msg>
+  <msg id="specify">
+You need to specify an object
+  </msg>
+  <msg id="locked">
+You can&apos;t open the %s because it is locked.
+  </msg>
+  <msg id="is-state">
+The %s is %s.
+  </msg>
+  <msg id="already">
+The %s is already %s.
+  </msg>
+  <msg id="unable">
+You can&apos;t %s a %s.
+  </msg>
+  <msg id="can&apos;t">
+I don&apos;t understand how to %s.
+  </msg>
+  <msg id="bad-cmd">
+&gt;%s&lt; is not recognized as a valid command
+  </msg>
+  <msg id="missing-room">
+***ERROR: You are unable to move in that direction.  There is a missing
+message for the room described by:
+%s
+  </msg>
+  <msg id="first-pass">
+Congradulations on leaving the starting point.
+  </msg>
+  <msg id="door-closed">
+While the door appears to be rather rickety, it is closed and blocks your
+passage.
+  </msg>
+  <msg id="window-closed">
+You might be able to squeeze through the window when it is open.  However it
+is not currently open and you merely squish your nose against the glass.
+  </msg>
+  <msg id="try-fly">
+You spread your arms and start flapping them.  As you come crashing back to
+the ground, you realize that you are not a bird and are unable to fly.
+  </msg>
+  <msg id="try-swim">
+Everything is rather blurry until you, coughing and sputtering, stick you 
+head back out of the water.
+  </msg>
+  <msg id="try-dig">
+You merely get your fingernails dirty while trying to imitate a gopher.
+  </msg>
+  <msg id="test-param">
+This message verifies that a number (%d) and a string (%s) can be passed
+  </msg>
+  <msg id="4">
+I&apos;m afraid that there is no way to go in that direction.
+  </msg>
+  <msg id="lid-closed">
+The way up the stairs is blocked by a heavy stone lid.
+  </msg>
+  <msg id="no drink">
+You can't drink %s.
+  </msg>
+  <msg id="drunk">
+You drunk the %s and now feel much less thirsty.
+  </msg>
+  <msg id="no eat">
+You can't eat %s.
+  </msg>
+  <msg id="eat">
+You ate the %s and now feel much less hungry.
+  </msg>
+  <msg id="14">
+Unfortunately, you have not yet reached the chapter in your karma development 
+workbook titled “How to Walk Through Walls”, and you simply bump your head on 
+the cliff.
+  </msg>
+  <msg id="object-list">
+You can see  the following objects:
+  </msg>
+  <msg id="36">
+You close your eyes and start to clear your mind.  As nothing happens, you 
+begin to remember that this is covered in the advanced karma development 
+correspondence course.
+  </msg>
+  <msg id="inventory">
+You are carrying:
+  </msg>
+  <msg id="102">
+You can notice that the air is beginning to be a little stuffy.
+  </msg>
+  <msg id="103">
+This air seems to be getting a little thick in here.  Perhaps you need to get 
+some fresh air.
+  </msg>
+  <msg id="104">
+You are beginning to find it difficult to breathe.  Your head is starting to 
+pound.  Perhaps you should get a breath of fresh air.
+  </msg>
+  <msg id="105">
+Oh dear.  You seem to have died of asphyxiation.  Perhaps the air recycling 
+unit on the ship wasn&apos;t working properly.
+  </msg>
+  <msg id="help">
+This program is a combination text adventure game and symbolic math package.
+Currently, the only math objects supported are polynomials.  Functions that can
+be performed on polynomials are: create, delete, add, multiply, subtract, list,
+  integrate, and derive.
+
+For the adventure game part, commands are: N, NE, E, SE, S, SW, W, NW, Up, Down,
+  get, drop, look, inventory, turn (object) on, turn (object) off, open, close,
+  quit, read, examine <bold>and</bold> help.
+  </msg>
+</adventure>

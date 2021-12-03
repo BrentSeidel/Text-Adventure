@@ -1,0 +1,3339 @@
+;
+; Adventure game configuration and data file.  The general syntax of most entries
+; is that each entry consists of a symbol indicating the type of the entry.  Following
+; the type in most cases is a string indicating the name of the entry and then the
+; data for the entry.
+;
+(:print "~&Loading data file~%")
+;
+; First describe the commands that can be used
+;
+(:print "~&Defining commands~%")
+(:vocab "walk"      :verb 1 :funct goto-location)
+(:vocab "north"     :verb 1 :funct goto-location :dir "N")
+(:vocab "east"      :verb 1 :funct goto-location :dir "E")
+(:vocab "south"     :verb 1 :funct goto-location :dir "S")
+(:vocab "west"      :verb 1 :funct goto-location :dir "W")
+(:vocab "n"         :verb 1 :funct goto-location :dir "N")
+(:vocab "e"         :verb 1 :funct goto-location :dir "E")
+(:vocab "s"         :verb 1 :funct goto-location :dir "S")
+(:vocab "w"         :verb 1 :funct goto-location :dir "W")
+(:vocab "northwest" :verb 1 :funct goto-location :dir "NW")
+(:vocab "northeast" :verb 1 :funct goto-location :dir "NE")
+(:vocab "southeast" :verb 1 :funct goto-location :dir "SE")
+(:vocab "southwest" :verb 1 :funct goto-location :dir "SW")
+(:vocab "nw"        :verb 1 :funct goto-location :dir "NW")
+(:vocab "ne"        :verb 1 :funct goto-location :dir "NE")
+(:vocab "se"        :verb 1 :funct goto-location :dir "SE")
+(:vocab "sw"        :verb 1 :funct goto-location :dir "SW")
+(:vocab "up"        :verb 1 :funct goto-location :dir "UP")
+(:vocab "down"      :verb 1 :funct goto-location :dir "DOWN")
+(:vocab "u"         :verb 1 :funct goto-location :dir "UP")
+(:vocab "d"         :verb 1 :funct goto-location :dir "DOWN")
+(:vocab "look"      :verb 1 :funct room-look)
+(:vocab "examine"   :verb 1 :funct describe-data)
+(:vocab "quit"      :verb 1 :quit 1)
+(:vocab "exit"      :verb 1 :funct quit-program)
+(:vocab "help"      :verb 1 :funct print-help)
+(:vocab "debug"     :verb 1 :funct debug-program)
+(:vocab "get"       :verb 1 :funct get-object)
+(:vocab "drop"      :verb 1 :funct drop-object)
+(:vocab "describe"  :verb 1 :funct describe-room)
+(:vocab "inventory" :verb 1 :funct list-inventory)
+(:vocab "teleport"  :verb 1 :funct teleport)
+(:vocab "the"       :article 1)
+(:vocab "a"         :article 1)
+;
+; Load the denizen
+;
+(:print "Loading denizen")
+(:denizen :id "player1" :name "Adventurer" :loc "start" :flags 0
+          :short "An adventurer"
+          :long "A rather disheveled looking adventurer"
+          :footprints "Some fairly human looking footprints")
+;
+; Load the messages
+;
+(:print "~&Loading messages~%")
+(:msg "start" "Sitting at your computer to try out some new software, you feel a strange 
+lethargy come over you...  You awake to find yourself laying in the middle of a 
+grassy field (someone seems to appreciate tired cliches).  You can see the sun 
+just beginning to rise over some trees to the (presumably) east.  The early 
+morning quiet begins to be shattered by the songs of birds.  As you get up to 
+take stock of your situation, you notice a stream to your south and a small 
+cliff to the west.  To the north as well as to the east (as you've noticed) is 
+what appears to be a forest.  You can also hear the sound of a nearby 
+waterfall.~%")
+(:msg "no-find-1" "I can't find a %s.~%")
+(:msg "no-find-2" "I can't find a %s %s.~%")
+(:msg "no-switch" "I can't switch a %s.~%")
+(:msg "turn-1" "Turning a %s %s.~%")
+(:msg "turn-2" "Turning a %s %s %s.~%")
+(:msg "which-name" "Which %s do you mean?  I found the following:~%")
+(:msg "list-name-adj" "A %s %s~%")
+(:msg "dark" "It's dark in here.  You are liable to trip and hurt yourself.~%")
+(:msg "immobile" "You are unable to pick up the %s~%")
+(:msg "specify" "You need to specify an object~%")
+(:msg "locked" "You can't open the %s because it is locked.~%")
+(:msg "is-state" "The %s is %s.~%")
+(:msg "already" "The %s is already %s.~%")
+(:msg "unable" "You can't %s a %s.~%")
+(:msg "can't" "~&I don't understand how to ~A~%.")
+(:msg "bad-cmd" "<%s> is not recognized as a valid command~%")
+(:msg "missing-room" "***ERROR: You are unable to move in that direction.  There is a missing
+message for the room described by:
+%s~%")
+(:msg "first-pass" "Congradulations on leaving the starting point.~%")
+(:msg "door-closed" "While the door appears to be rather rickety, it is closed and blocks your
+passage.~%")
+(:msg "window-closed" "You might be able to squeeze through the window when it is open.  However it
+is not currently open and you merely squish your nose against the glass.~%")
+(:msg "try-fly" "You spread your arms and start flapping them.  As you come crashing back to
+the ground, you realize that you are not a bird and are unable to fly.~%")
+(:msg "try-swim" "Everything is rather blurry until you, coughing and sputtering, stick you 
+head back out of the water.~%")
+(:msg "try-dig" "You merely get your fingernails dirty while trying to imitate a gopher.~%")
+(:msg "test-param" "This message verifies that a number (%d) and a string (%s) can be passed.~%")
+(:msg "4" "I'm afraid that there is no way to go in that direction.~%")
+(:msg "lid-closed" "The way up the stairs is blocked by a heavy stone lid.~%")
+(:msg "no drink" "You can't drink %s.~%")
+(:msg "drunk" "You drunk the %s and now feel much less thirsty.~%")
+(:msg "no eat" "You can't eat %s.~%")
+(:msg "eat" "You ate the %s and now feel much less hungry.~%")
+(:msg "14" "Unfortunately, you have not yet reached the chapter in your karma development 
+workbook titled \"How to Walk Through Walls\", and you simply bump your head on 
+the cliff.~%")
+(:msg "object-list" "You can see  the following objects:~%")
+(:msg "karma" "You close your eyes and start to clear your mind.  As nothing happens, you 
+begin to remember that this is covered in the advanced karma development 
+correspondence course.~%")
+(:msg "inventory" "You are carrying:~%")
+(:msg "102" "You can notice that the air is beginning to be a little stuffy.~%")
+(:msg "103" "This air seems to be getting a little thick in here.  Perhaps you need to get 
+some fresh air.~%")
+(:msg "104" "You are beginning to find it difficult to breathe.  Your head is starting to 
+pound.  Perhaps you should get a breath of fresh air.~%")
+(:msg "105" "Oh dear.  You seem to have died of asphyxiation.  Perhaps the air recycling 
+unit on the ship wasn't working properly.~%")
+(:msg "help" "This program is a combination text adventure game and symbolic math package.
+Currently, the only math objects supported are polynomials.  Functions that can
+be performed on polynomials are: create, delete, add, multiply, subtract, list,
+  integrate, and derive.
+
+For the adventure game part, commands are: N, NE, E, SE, S, SW, W, NW, Up, Down,
+  get, drop, look, inventory, turn (object) on, turn (object) off, open, close,
+  quit, read, examine and help.~%")
+;
+; Load locations.
+;
+(:room "start" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0002 :dest "8"  :pass "first-pass")
+        (:dir "NE"   :flags #x0002 :dest "9"  :pass "first-pass")
+        (:dir "E"    :flags #x0002 :dest "13" :pass "first-pass")
+        (:dir "SE"   :flags #x0002 :dest "18" :pass "first-pass")
+        (:dir "S"    :flags #x0002 :dest "17" :pass "first-pass")
+        (:dir "SW"   :flags #x0002 :dest "16" :pass "first-pass")
+        (:dir "W"    :flags #x0002 :dest "12" :pass "first-pass")
+        (:dir "NW"   :flags #x0002 :dest "7"  :pass "first-pass")
+        (:dir "UP"   :flags #x0000 :closed "try-fly")
+        (:dir "DOWN" :flags #x0000 :closed "karma"))
+       :long "You are in the middle of a grassy meadow.  You notice a stream to your south, a 
+small cliff to the west and to the north as well as to the east is what appears 
+to be a forest.  You can  hear the sound of a nearby waterfall.~%"
+       :short "You are in the middle of a grassy meadow.~%")
+(:room "1" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "101")
+        (:dir "NE"   :flags #x0000  :dest "102")
+        (:dir "E"    :flags #x0000  :dest "2")
+        (:dir "SE"   :flags #x0000  :dest "7")
+        (:dir "S"    :flags #x0000  :dest "6")
+        (:dir "SW"   :flags #x0000  :closed "14")
+        (:dir "W"    :flags #x0000  :closed "14")
+        (:dir "NW"   :flags #x0000  :closed "14")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You seem to be trying to penetrate some dense brush.  To the west the face of 
+the cliff and to the north the brush gets even denser.  There seems to be a 
+clearing to the south and southeast.  There is forest to the east and north.~%"
+       :short "You seem to be trying to penetrate some dense brush.~%")
+(:room "2" flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "103")
+        (:dir "NE"   :flags #x0000  :dest "104")
+        (:dir "E"    :flags #x0000  :dest "3")
+        (:dir "SE"   :flags #x0000  :dest "8")
+        (:dir "S"    :flags #x0000  :dest "7")
+        (:dir "SW"   :flags #x0000  :dest "6")
+        (:dir "W"    :flags #x0000  :dest "1")
+        (:dir "NW"   :flags #x0000  :dest "105")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You appear to be in the southern fringes of a large forest.  There is a 
+clearing to the south.~%"
+       :short "You appear to be in the southern fringes of a large forest.~%")
+(:room "3" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "106")
+        (:dir "NE"   :flags #x0000  :dest "107")
+        (:dir "E"    :flags #x0000  :dest "4")
+        (:dir "SE"   :flags #x0000  :dest "9")
+        (:dir "S"    :flags #x0000  :dest "8")
+        (:dir "SW"   :flags #x0000  :dest "7")
+        (:dir "W"    :flags #x0000  :dest "2")
+        (:dir "NW"   :flags #x0000  :dest "108")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You appear to be in the southern fringes of a large forest.  There is a 
+clearing to the south.~%"
+       :short "You appear to be in the southern fringes of a large forest.~%")
+(:room "4" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "109")
+        (:dir "NE"   :flags #x0000  :dest "58")
+        (:dir "E"    :flags #x0000  :dest "trail-1")
+        (:dir "SE"   :flags #x0000  :dest "trail-1")
+        (:dir "S"    :flags #x0000  :dest "9")
+        (:dir "SW"   :flags #x0000  :dest "8")
+        (:dir "W"    :flags #x0000  :dest "3")
+        (:dir "NW"   :flags #x0000  :dest "101")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You appear to be in the southern fringes of a large forest.  There is a 
+clearing to the south.~%"
+       :short "You appear to be in the southern fringes of a large forest.~%")
+(:room "trail-1" :flags #x000000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "58")
+        (:dir "NE"   :flags #x0000  :dest "trail-2")
+        (:dir "E"    :flags #x0000  :dest "66")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "10")
+        (:dir "SW"   :flags #x0000  :dest "9")
+        (:dir "W"    :flags #x0000  :dest "4")
+        (:dir "NW"   :flags #x0000  :dest "102")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are near one end of a trail that runs off to the northeast.  There is 
+forest all around the trail, but it appears to thin out towards the southwest.  
+Perhaps there is a meadow there.~%"
+       :short "You are near one end of a trail that runs off to the northeast.~%")
+(:room "6" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "1")
+        (:dir "NE"   :flags #x0000  :dest "2")
+        (:dir "E"    :flags #x0000  :dest "7")
+        (:dir "SE"   :flags #x0000  :dest "12")
+        (:dir "S"    :flags #x0000  :dest "11")
+        (:dir "SW"   :flags #x0000  :closed "14")
+        (:dir "W"    :flags #x0000  :closed "14")
+        (:dir "NW"   :flags #x0000  :closed "14")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are at the base of a small cliff on the west edge of the meadow.  Travel to 
+the north would be difficult due to some dense brush at the west end of a large 
+forest.~%"
+       :short "You are at the base of a small cliff on the west edge of the meadow.~%")
+(:room "7" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "2")
+        (:dir "NE"   :flags #x0000  :dest "3")
+        (:dir "E"    :flags #x0000  :dest "8")
+        (:dir "SE"   :flags #x0000  :dest "start")
+        (:dir "S"    :flags #x0000  :dest "12")
+        (:dir "SW"   :flags #x0000  :dest "11")
+        (:dir "W"    :flags #x0000  :dest "6")
+        (:dir "NW"   :flags #x0000  :dest "1")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "From the northwest corner of a meadow you can see the southern fringes of a 
+large forest just to the north.~%"
+       :short "You are in the northwest corner of a meadow.~%")
+(:room "8" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "3")
+        (:dir "NE"   :flags #x0000  :dest "4")
+        (:dir "E"    :flags #x0000  :dest "9")
+        (:dir "SE"   :flags #x0000  :dest "13")
+        (:dir "S"    :flags #x0000  :dest "start")
+        (:dir "SW"   :flags #x0000  :dest "12")
+        (:dir "W"    :flags #x0000  :dest "7")
+        (:dir "NW"   :flags #x0000  :dest "2")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are in a meadow just to the south of a large forest.~%"
+       :short "You are in a meadow just to the south of a large forest.~%")
+(:room "9" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "4")
+        (:dir "NE"   :flags #x0000  :dest "trail-1")
+        (:dir "E"    :flags #x0000  :dest "10")
+        (:dir "SE"   :flags #x0000  :dest "14")
+        (:dir "S"    :flags #x0000  :dest "13")
+        (:dir "SW"   :flags #x0000  :dest "start")
+        (:dir "W"    :flags #x0000  :dest "8")
+        (:dir "NW"   :flags #x0000  :dest "3")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are at the northeast corner of a meadow.  There appears to be a trail 
+leading off to the northeast.  To the north and west are large forests.~%"
+       :short "You are at the northeast corner of a meadow.~%")
+(:room "10" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "trail-1")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "14")
+        (:dir "SW"   :flags #x0000  :dest "13")
+        (:dir "W"    :flags #x0000  :dest "9")
+        (:dir "NW"   :flags #x0000  :dest "trail-1")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You appear to be in the western fringes of a large forest.  There is a clearing 
+to the east.  It sounds like there might be a stream in the vicinity.~%"
+       :short "You appear to be in the western fringes of a large forest.~%")
+(:room "11" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "6")
+        (:dir "NE"   :flags #x0000  :dest "7")
+        (:dir "E"    :flags #x0000  :dest "12")
+        (:dir "SE"   :flags #x0000  :dest "16")
+        (:dir "S"    :flags #x0000  :dest "15")
+        (:dir "SW"   :flags #x0000  :closed "14")
+        (:dir "W"    :flags #x0000  :closed "14")
+        (:dir "NW"   :flags #x0000  :closed "14")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are at the base of a small cliff on the west edge of the meadow.  Travel to 
+the west would be difficult due to the cliff.  You can hear the sound of a
+nearby waterfall.~%"
+       :short "You are at the base of a small cliff on the west edge of the meadow.~%")
+(:room "12" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "7")
+        (:dir "NE"   :flags #x0000  :dest "8")
+        (:dir "E"    :flags #x0000  :dest "start")
+        (:dir "SE"   :flags #x0000  :dest "17")
+        (:dir "S"    :flags #x0000  :dest "16")
+        (:dir "SW"   :flags #x0000  :dest "15")
+        (:dir "W"    :flags #x0000  :dest "11")
+        (:dir "NW"   :flags #x0000  :dest "6")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are at the west side of a meadow.  There is a cliff to the west.  It sounds 
+like there might be a stream to the south.~%"
+       :short "You are at the west side of a meadow.~%")
+(:room "13" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "9")
+        (:dir "NE"   :flags #x0000  :dest "10")
+        (:dir "E"    :flags #x0000  :dest "14")
+        (:dir "SE"   :flags #x0000  :dest "19")
+        (:dir "S"    :flags #x0000  :dest "18")
+        (:dir "SW"   :flags #x0000  :dest "17")
+        (:dir "W"    :flags #x0000  :dest "start")
+        (:dir "NW"   :flags #x0000  :dest "8")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are at the east side of a meadow.  There is a large forest to the east.  
+You can hear the sound of a nearby stream.~%"
+       :short "You are at the east side of a meadow.~%")
+(:room "14" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "10")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "19")
+        (:dir "SW"   :flags #x0000  :dest "18")
+        (:dir "W"    :flags #x0000  :dest "13")
+        (:dir "NW"   :flags #x0000  :dest "9")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You appear to be in the western fringes of a large forest.  There is a clearing 
+to the east.  It sounds like there might be a stream in the vicinity.~%"
+       :short "You appear to be in the western fringes of a large forest.~%")
+(:room "15" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "11")
+        (:dir "NE"   :flags #x0000  :dest "12")
+        (:dir "E"    :flags #x0000  :dest "16")
+        (:dir "SE"   :flags #x0000  :dest "stream-2")
+        (:dir "S"    :flags #x0000  :dest "stream-1")
+        (:dir "SW"   :flags #x0000  :dest "21")
+        (:dir "W"    :flags #x0000  :closed "14")
+        (:dir "NW"   :flags #x0000  :closed "14")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are at the edge of a meadow.  To the south, you can see a waterfall coming 
+from the top of the cliff.  There is a sizable pool of water to the base of the 
+falls.  It looks like you could probably crawl behind the falls, though it is 
+unclear what that would accomplish besides soaking you in cold water.  Travel 
+to the west would not be successful due to the presence of a cliff.~%"
+       :short "You are at the edge of a meadow near a waterfall.~%")
+(:room "16" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "12")
+        (:dir "NE"   :flags #x0000  :dest "start")
+        (:dir "E"    :flags #x0000  :dest "17")
+        (:dir "SE"   :flags #x0000  :dest "stream-3")
+        (:dir "S"    :flags #x0000  :dest "stream-2")
+        (:dir "SW"   :flags #x0000  :dest "stream-1")
+        (:dir "W"    :flags #x0000  :dest "15")
+        (:dir "NW"   :flags #x0000  :dest "11")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are on the north shore of a pool of water.  There is a small waterfall 
+entering the pool from the west.  A stream exits the pool to the east.  There 
+are some rocks on this side that would be suitable to sit on and perhaps eat a 
+lunch.  All in all, this seems to be a rather pleasant spot.~%"
+       :short "You are on the north shore of a pool of water.~%")
+(:room "17" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "start")
+        (:dir "NE"   :flags #x0000  :dest "13")
+        (:dir "E"    :flags #x0000  :dest "18")
+        (:dir "SE"   :flags #x0000  :dest "stream-4")
+        (:dir "S"    :flags #x0000  :dest "stream-3")
+        (:dir "SW"   :flags #x0000  :dest "stream-2")
+        (:dir "W"    :flags #x0000  :dest "16")
+        (:dir "NW"   :flags #x0000  :dest "12")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are at the east end of a pool of water where it exits into a stream.  You 
+can see a waterfall emptying into the west end of the pool.  There are some 
+rocks in the water here and it looks like you could cross the stream on the 
+rocks.  There are some blackberry bushes to the east.~%"
+       :short "You are at the east end of a pool of water.~%")
+(:room "18" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "13")
+        (:dir "NE"   :flags #x0000  :dest "14")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :dest "stream-5")
+        (:dir "S"    :flags #x0000  :dest "stream-4")
+        (:dir "SW"   :flags #x0000  :dest "stream-3")
+        (:dir "W"    :flags #x0000  :dest "17")
+        (:dir "NW"   :flags #x0000  :dest "start")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are in the middle of a tangle of blackberry bushes.  Travel to the east 
+would be impossible.  It might be able to escape to the west or north with only 
+a few scratches.~%"
+       :short "You are in the middle of a tangle of blackberry bushes.~%")
+(:room "19" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "14")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "stream-5")
+        (:dir "SW"   :flags #x0000  :dest "stream-4")
+        (:dir "W"    :flags #x0000  :dest "18")
+        (:dir "NW"   :flags #x0000  :dest "13")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are in the middle of a tangle of blackberry bushes.  Travel to the east or 
+west would be impossible.  It might be able to escape to the north with only a 
+few scratches.~%"
+       :short "You are in the middle of a tangle of blackberry bushes.~%")
+(:room "cave-1" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "21")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+       :long "You appear to be in the entrance of a cave.  Unfortunately, due to the general 
+lack of illumination, you cannot tell how far back the cave goes, but you may 
+be able to travel some distance to the west.  On the other hand, you might fall 
+into a pit and die.  To the east you can see water streaming over the mouth of 
+the cave.~%"
+       :short "You appear to be in the entrance of a cave.~%")
+(:room "21" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :dest "15")
+        (:dir "E"    :flags #x0000  :dest "stream-1")
+        (:dir "SE"   :flags #x0000  :dest "27")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "cave-1")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a space behind the waterfall.  It looks like you could go to the 
+northeast or southeast without getting too soaked.  There also appears to be a 
+small cave to the west.~%"
+    :short "You are in a space behind the waterfall.~%")
+(:room "stream-1" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You have unwisely tried to use the waterfall as a shower.  Unfortunately, it 
+has a somewhat greater volume of water than the showers that you more 
+customarily use.  The impact seems to have killed you.~%"
+    :short "You have unwisely tried to use the waterfall as a shower.  Unfortunately, it 
+has a somewhat greater volume of water than the showers that you more 
+customarily use.  The impact seems to have killed you.~%")
+(:room "stream-2" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "16")
+        (:dir "NE"   :flags #x0000  :dest "17")
+        (:dir "E"    :flags #x0000  :dest "stream-3")
+        (:dir "SE"   :flags #x0000  :dest "29")
+        (:dir "S"    :flags #x0000  :dest "28")
+        (:dir "SW"   :flags #x0000  :dest "27")
+        (:dir "W"    :flags #x0000  :dest "stream-1")
+        (:dir "NW"   :flags #x0000  :dest "15")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "try-swim"))
+    :long "You are in a pool of water that is filled by a waterfall at the west end.  A 
+stream flows out of the east end.~%"
+    :short "You are in a pool of water that is filled by a waterfall at the west end.~%")
+(:room "stream-3" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "17")
+        (:dir "NE"   :flags #x0000  :dest "18")
+        (:dir "E"    :flags #x0000  :dest "stream-4")
+        (:dir "SE"   :flags #x0000  :dest "30")
+        (:dir "S"    :flags #x0000  :dest "29")
+        (:dir "SW"   :flags #x0000  :dest "28")
+        (:dir "W"    :flags #x0000  :dest "stream-2")
+        (:dir "NW"   :flags #x0000  :dest "16")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "try-swim"))
+    :long "You are standing in the middle of an east-west stream.  There is a pool of 
+water filled by a waterfall to the west.  The stream continues to the east.~%"
+    :short "You are standing in the middle of an east-west stream.~%")
+(:room "stream-4" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "18")
+        (:dir "NE"   :flags #x0000  :dest "19")
+        (:dir "E"    :flags #x0000  :dest "stream-5")
+        (:dir "SE"   :flags #x0000  :dest "31")
+        (:dir "S"    :flags #x0000  :dest "30")
+        (:dir "SW"   :flags #x0000  :dest "29")
+        (:dir "W"    :flags #x0000  :dest "stream-3")
+        (:dir "NW"   :flags #x0000  :dest "17")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "try-swim"))
+    :long "You are in the middle of an east-west stream.  There are a bunch of blackberry 
+bushes on the south bank and a meadow on the north.~%"
+    :short "You are in the middle of an east-west stream.~%")
+(:room "stream-5" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "19")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "31")
+        (:dir "SW"   :flags #x0000  :dest "30")
+        (:dir "W"    :flags #x0000  :dest "stream-4")
+        (:dir "NW"   :flags #x0000  :dest "18")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "try-swim"))
+    :long "You are in the middle of an east-west stream.  There are a bunch of blackberry 
+bushes on the south bank and a meadow on the north.~%"
+    :short "You are in the middle of an east-west stream.~%")
+(:room "27" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "stream-1")
+        (:dir "NE"   :flags #x0000  :dest "stream-2")
+        (:dir "E"    :flags #x0000  :dest "28")
+        (:dir "SE"   :flags #x0000  :dest "33")
+        (:dir "S"    :flags #x0000  :dest "32")
+        (:dir "SW"   :flags #x0000  :closed "14")
+        (:dir "W"    :flags #x0000  :closed "14")
+        (:dir "NW"   :flags #x0000  :dest "21")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "To the north, you can see a waterfall coming from the top of the cliff.  There 
+is a sizable pool of water to the base of the falls.  It looks like you could 
+probably crawl behind the falls, though it is unclear what that would 
+accomplish besides soaking you in cold water.  Travel to the west would be 
+difficult due to a cliff.  There are some dense bushes to the south.~%"
+    :short "You are south of the waterfall.~%")
+(:room "28" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "stream-2")
+        (:dir "NE"   :flags #x0000  :dest "stream-3")
+        (:dir "E"    :flags #x0000  :dest "29")
+        (:dir "SE"   :flags #x0000  :dest "34")
+        (:dir "S"    :flags #x0000  :dest "33")
+        (:dir "SW"   :flags #x0000  :dest "32")
+        (:dir "W"    :flags #x0000  :dest "27")
+        (:dir "NW"   :flags #x0000  :dest "stream-1")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are on the south side of a pool at the base of a waterfall.  To the north 
+of the pool, you can see a meadow.  Further to the south, there is some 
+impenetrable underbrush.~%"
+    :short "You are on the south side of a pool at the base of a waterfall.~%")
+(:room "29" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "stream-3")
+        (:dir "NE"   :flags #x0000  :dest "stream-4")
+        (:dir "E"    :flags #x0000  :dest "30")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "34")
+        (:dir "SW"   :flags #x0000  :dest "33")
+        (:dir "W"    :flags #x0000  :dest "28")
+        (:dir "NW"   :flags #x0000  :dest "stream-2")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are on the south bank of a stream.  The a pool filled by a waterfall is to 
+the northwest.  To the south are some thorn bushes.  The bushes to the east are 
+blackberries and at least will have some good fruit when they are ripe.~%"
+    :short "You are on the south bank of a stream.~%")
+(:room "30" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "stream-4")
+        (:dir "NE"   :flags #x0000  :dest "stream-5")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "29")
+        (:dir "NW"   :flags #x0000  :dest "stream-3")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You have entered a clump of blackberries to the south of a stream.  
+Unfortunately, none are ripe at this time.  Perhaps if you try again later in 
+the year you will have better luck.  It looks like you can escape to the west.~%"
+    :short "You have entered a clump of blackberries to the south of a stream.~%")
+(:room "31" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "stream-5")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :dest "stream-4")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You have entered a clump of blackberries to the south of a stream.  
+Unfortunately, none are ripe at this time.  Perhaps if you try again later in 
+the year you will have better luck.  It looks like you can escape to the west.~%"
+    :short "You have entered a clump of blackberries to the south of a stream.~%")
+(:room "32" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "27")
+        (:dir "NE"   :flags #x0000  :dest "28")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "14")
+        (:dir "W"    :flags #x0000  :closed "14")
+        (:dir "NW"   :flags #x0000  :closed "14")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You have tangled yourself in some dense brush near the waterfall.  The only 
+route of escape seems to be to the north.~%"
+    :short "You have tangled yourself in some dense brush near the waterfall.~%")
+(:room "33" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "28")
+        (:dir "NE"   :flags #x0000  :dest "29")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :dest "27")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are trying to penetrate some impenetrable underbrush.  You can however go 
+to the north.~%"
+    :short "You are trying to penetrate some impenetrable underbrush.~%")
+(:room "34" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "29")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :dest "28")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a tangle of thorn bushes.  Unfortunately, these will bear no edible 
+fruit at any time during their life-cycle.  It looks like it would be possible 
+to exit to the north or northwest.~%"
+    :short "You are in a tangle of thorn bushes.~%")
+(:room "35" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "35")
+        (:dir "NE"   :flags #x0000  :dest "70")
+        (:dir "E"    :flags #x0000  :dest "36")
+        (:dir "SE"   :flags #x0000  :dest "138")
+        (:dir "S"    :flags #x0000  :dest "137")
+        (:dir "SW"   :flags #x0000  :dest "133")
+        (:dir "W"    :flags #x0000  :dest "130")
+        (:dir "NW"   :flags #x0000  :dest "67")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the north fringes of a large forest.  It looks like there is some 
+clearing to the north.~%"
+    :short "You are in the north fringes of a large forest.~%")
+(:room "36" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "70")
+        (:dir "NE"   :flags #x0000  :dest "71")
+        (:dir "E"    :flags #x0000  :dest "63")
+        (:dir "SE"   :flags #x0000  :dest "139")
+        (:dir "S"    :flags #x0000  :dest "138")
+        (:dir "SW"   :flags #x0000  :dest "137")
+        (:dir "W"    :flags #x0000  :dest "35")
+        (:dir "NW"   :flags #x0000  :dest "69")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the north fringes of a large forest.  It looks like there is some 
+clearing to the north.~%"
+    :short "You are in the north fringes of a large forest.~%")
+(:room "37" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "110")
+        (:dir "NE"   :flags #x0000  :dest "111")
+        (:dir "E"    :flags #x0000  :dest "38")
+        (:dir "SE"   :flags #x0000  :dest "road-3")
+        (:dir "S"    :flags #x0000  :dest "44")
+        (:dir "SW"   :flags #x0000  :dest "43")
+        (:dir "W"    :flags #x0000  :dest "112")
+        (:dir "NW"   :flags #x0000  :dest "113")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a large forest.  There appears to be some clearing to the southeast.~%"
+    :short "You are in a large forest.~%")
+(:room "38" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "118")
+        (:dir "NE"   :flags #x0000  :dest "119")
+        (:dir "E"    :flags #x0000  :dest "39")
+        (:dir "SE"   :flags #x0000  :dest "road-4")
+        (:dir "S"    :flags #x0000  :dest "road-3")
+        (:dir "SW"   :flags #x0000  :dest "44")
+        (:dir "W"    :flags #x0000  :dest "37")
+        (:dir "NW"   :flags #x0000  :dest "117")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.~%"
+    :short "You appear to be in the southern fringes of a large forest.~%")
+(:room "39" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "120")
+        (:dir "NE"   :flags #x0000  :dest "121")
+        (:dir "E"    :flags #x0000  :dest "40")
+        (:dir "SE"   :flags #x0000  :dest "road-5")
+        (:dir "S"    :flags #x0000  :dest "road-4")
+        (:dir "SW"   :flags #x0000  :dest "road-3")
+        (:dir "W"    :flags #x0000  :dest "38")
+        (:dir "NW"   :flags #x0000  :dest "122")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.~%"
+    :short "You appear to be in the southern fringes of a large forest.~%")
+(:room "40" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "123")
+        (:dir "NE"   :flags #x0000  :dest "124")
+        (:dir "E"    :flags #x0000  :dest "41")
+        (:dir "SE"   :flags #x0000  :dest "road-6")
+        (:dir "S"    :flags #x0000  :dest "road-5")
+        (:dir "SW"   :flags #x0000  :dest "road-3")
+        (:dir "W"    :flags #x0000  :dest "39")
+        (:dir "NW"   :flags #x0000  :dest "125")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.~%"
+    :short "You appear to be in the southern fringes of a large forest.~%")
+(:room "41" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "126")
+        (:dir "NE"   :flags #x0000  :dest "127")
+        (:dir "E"    :flags #x0000  :dest "42")
+        (:dir "SE"   :flags #x0000  :dest "road-7")
+        (:dir "S"    :flags #x0000  :dest "road-6")
+        (:dir "SW"   :flags #x0000  :dest "road-5")
+        (:dir "W"    :flags #x0000  :dest "40")
+        (:dir "NW"   :flags #x0000  :dest "119")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.~%"
+    :short "You appear to be in the southern fringes of a large forest.~%")
+(:room "42" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "120")
+        (:dir "NE"   :flags #x0000  :dest "121")
+        (:dir "E"    :flags #x0000  :dest "122")
+        (:dir "SE"   :flags #x0000  :dest "123")
+        (:dir "S"    :flags #x0000  :dest "road-7")
+        (:dir "SW"   :flags #x0000  :dest "road-6")
+        (:dir "W"    :flags #x0000  :dest "41")
+        (:dir "NW"   :flags #x0000  :dest "124")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You appear to be in the southern fringes of a large forest.  You can see a 
+clearing for a road to the south.~%"
+    :short "You appear to be in the southern fringes of a large forest.~%")
+(:room "43" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "114")
+        (:dir "NE"   :flags #x0000  :dest "37")
+        (:dir "E"    :flags #x0000  :dest "44")
+        (:dir "SE"   :flags #x0000  :dest "road-2")
+        (:dir "S"    :flags #x0000  :dest "51")
+        (:dir "SW"   :flags #x0000  :dest "50")
+        (:dir "W"    :flags #x0000  :dest "115")
+        (:dir "NW"   :flags #x0000  :dest "116")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a large forest.  There appears to be some clearing to the southeast.~%"
+    :short "You are in a large forest.~%")
+(:room "44" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "37")
+        (:dir "NE"   :flags #x0000  :dest "38")
+        (:dir "E"    :flags #x0000  :dest "road-3")
+        (:dir "SE"   :flags #x0000  :dest "road-2")
+        (:dir "S"    :flags #x0000  :dest "road-2")
+        (:dir "SW"   :flags #x0000  :dest "51")
+        (:dir "W"    :flags #x0000  :dest "43")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+       :long "You are in a large forest.  There appears to be a clearing for a road to the 
+southeast.~%"
+       :short "You are in a large forest.~%")
+(:room "road-3" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "38")
+        (:dir "NE"   :flags #x0000  :dest "39")
+        (:dir "E"    :flags #x0000  :dest "road-4")
+        (:dir "SE"   :flags #x0000  :dest "54")
+        (:dir "S"    :flags #x0000  :dest "53")
+        (:dir "SW"   :flags #x0000  :dest "road-2")
+        (:dir "W"    :flags #x0000  :dest "44")
+        (:dir "NW"   :flags #x0000  :dest "37")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are on a road in a forest.  The road appears to exit the forest to the 
+east.  The road also goes deeper into the forest to the southwest.~%"
+    :short "You are on a road in a forest.~%")
+(:room "road-4" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "39")
+        (:dir "NE"   :flags #x0000  :dest "40")
+        (:dir "E"    :flags #x0000  :dest "road-5")
+        (:dir "SE"   :flags #x0000  :dest "55")
+        (:dir "S"    :flags #x0000  :dest "54")
+        (:dir "SW"   :flags #x0000  :dest "53")
+        (:dir "W"    :flags #x0000  :dest "road-3")
+        (:dir "NW"   :flags #x0000  :dest "38")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are on a road at the north edge a clearing.  The road continues to the 
+east.  The road also enters the forest to the west.~%"
+    :short "You are on a road at the north edge a clearing.~%")
+(:room "road-5" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "40")
+        (:dir "NE"   :flags #x0000  :dest "41")
+        (:dir "E"    :flags #x0000  :dest "road-6")
+        (:dir "SE"   :flags #x0000  :dest "56")
+        (:dir "S"    :flags #x0000  :dest "55")
+        (:dir "SW"   :flags #x0000  :dest "54")
+        (:dir "W"    :flags #x0000  :dest "road-4")
+        (:dir "NW"   :flags #x0000  :dest "39")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are on a east-west road at the north edge a clearing.  To the south is what 
+appears to be an abandoned house.~%"
+    :short "You are on a east-west road at the north edge a clearing.~%")
+(:room "road-6" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "41")
+        (:dir "NE"   :flags #x0000  :dest "42")
+        (:dir "E"    :flags #x0000  :dest "road-7")
+        (:dir "SE"   :flags #x0000  :dest "57")
+        (:dir "S"    :flags #x0000  :dest "56")
+        (:dir "SW"   :flags #x0000  :dest "55")
+        (:dir "W"    :flags #x0000  :dest "road-5")
+        (:dir "NW"   :flags #x0000  :dest "40")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are on a east-west road at the north edge a clearing.  The road also enters 
+the forest to the east.~%"
+    :short "You are on a east-west road at the north edge a clearing.~%")
+(:room "road-7" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "42")
+       (:dir "NE"   :flags #x0000  :closed "4")
+       (:dir "E"    :flags #x0000  :closed "4")
+       (:dir "SE"   :flags #x0000  :dest "146")
+       (:dir "S"    :flags #x0000  :dest "57")
+       (:dir "SW"   :flags #x0000  :dest "56")
+       (:dir "W"    :flags #x0000  :dest "road-6")
+       (:dir "NW"   :flags #x0000  :dest "41")
+       (:dir "UP"   :flags #x0000  :closed "try-fly")
+       (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are on a road in a forest.  To the east, the road ends abruptly in a 
+washout.  The road to the west appears to break out into a clearing.~%"
+    :short "You are on a road in a forest.~%")
+(:room "50" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "117")
+        (:dir "NE"   :flags #x0000  :dest "43")
+        (:dir "E"    :flags #x0000  :dest "51")
+        (:dir "SE"   :flags #x0000  :dest "trail-2")
+        (:dir "S"    :flags #x0000  :dest "58")
+        (:dir "SW"   :flags #x0000  :dest "103")
+        (:dir "W"    :flags #x0000  :dest "104")
+        (:dir "NW"   :flags #x0000  :dest "105")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a large forest.  There appears to be some clearing to the southeast.~%"
+    :short "You are in a large forest.~%")
+(:room "51" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "43")
+        (:dir "NE"   :flags #x0000  :dest "44")
+        (:dir "E"    :flags #x0000  :dest "road-2")
+        (:dir "SE"   :flags #x0000  :dest "road-1")
+        (:dir "S"    :flags #x0000  :dest "trail-2")
+        (:dir "SW"   :flags #x0000  :dest "58")
+        (:dir "W"    :flags #x0000  :dest "50")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a large forest.  There appears to be a clearing for a road to the 
+southeast.~%"
+    :short "You are in a large forest.~%")
+(:room "road-2" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "44")
+        (:dir "NE"   :flags #x0000  :dest "road-3")
+        (:dir "E"    :flags #x0000  :dest "53")
+        (:dir "SE"   :flags #x0000  :dest "61")
+        (:dir "S"    :flags #x0000  :dest "road-1")
+        (:dir "SW"   :flags #x0000  :dest "51")
+        (:dir "W"    :flags #x0000  :dest "51")
+        (:dir "NW"   :flags #x0000  :dest "43")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are at a bend in a road in a forest.  The road appears to end a little ways 
+to the south.  The road also continues to the northeast.~%"
+    :short "You are at a bend in a road in a forest.~%")
+(:room "53" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "road-3")
+        (:dir "NE"   :flags #x0000  :dest "road-4")
+        (:dir "E"    :flags #x0000  :dest "54")
+        (:dir "SE"   :flags #x0000  :dest "62")
+        (:dir "S"    :flags #x0000  :dest "61")
+        (:dir "SW"   :flags #x0000  :dest "road-1")
+        (:dir "W"    :flags #x0000  :dest "road-2")
+        (:dir "NW"   :flags #x0008  :dest "road-2")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a small north pointing finger of forest.  There is a clearing to the 
+east and road to the north and west.  More forest is to the south.~%"
+    :short "You are in a small north pointing finger of forest.~%")
+(:room "54" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "road-4")
+        (:dir "NE"   :flags #x0000  :dest "road-5")
+        (:dir "E"    :flags #x0000  :dest "55")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "62")
+        (:dir "SW"   :flags #x0000  :dest "61")
+        (:dir "W"    :flags #x0000  :dest "53")
+        (:dir "NW"   :flags #x0000  :dest "road-3")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are at the west edge of a clearing to the northwest of an abandoned old 
+house.  There is forest to the west and a road to the north.  The lawn is to 
+the east.~%"
+    :short "You are at the west edge of a clearing to the northwest of an abandoned old 
+house.~%")
+(:room "55" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "road-5")
+        (:dir "NE"   :flags #x0000  :dest "road-6")
+        (:dir "E"    :flags #x0000  :dest "56")
+        (:dir "SE"   :flags #x0000  :dest "64")
+        (:dir "S"    :flags #x0000  :dest "house-2" object="door-1" closed="door-closed")
+        (:dir "SW"   :flags #x0000  :dest "62")
+        (:dir "W"    :flags #x0000  :dest "54")
+        (:dir "NW"   :flags #x0000  :dest "road-4")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the lawn in front of an abandoned old house.  There is a road to the 
+north.  From here it doesn't look like entry would be easy or profitable.  The 
+windows are all boarded up.  The front door is also boarded over.  You could 
+probably break it or one of the windows down if the porch would support your 
+weight.~%"
+    :short "You are in the lawn in front of an abandoned old house.~%")
+(:room "56" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "road-6")
+        (:dir "NE"   :flags #x0000  :dest "road-7")
+        (:dir "E"    :flags #x0000  :dest "57")
+        (:dir "SE"   :flags #x0000  :dest "65")
+        (:dir "S"    :flags #x0000  :dest "64")
+        (:dir "SW"   :flags #x0000  :dest "house-3")
+        (:dir "W"    :flags #x0000  :dest "55")
+        (:dir "NW"   :flags #x0000  :dest "road-5")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the clearing to the northeast of an abandoned old house.  The 
+dilapidated garage is to the southwest.  It looks like you might be able to 
+force entry, but it would probably collapse on you if you did.  There is also a 
+road to the north.~%"
+    :short "You are in the clearing to the northeast of an abandoned old house.~%")
+(:room "57" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "road-7")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "146")
+        (:dir "SE"   :flags #x0000  :dest "149")
+        (:dir "S"    :flags #x0000  :dest "65")
+        (:dir "SW"   :flags #x0000  :dest "64")
+        (:dir "W"    :flags #x0000  :dest "56")
+        (:dir "NW"   :flags #x0000  :dest "road-6")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the western fringes of a large forest.  There is a clearing to the 
+west and a road to the north.~%"
+    :short "You are in the western fringes of a large forest.~%")
+(:room "58" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "50")
+        (:dir "NE"   :flags #x0000  :dest "51")
+        (:dir "E"    :flags #x0000  :dest "trail-2")
+        (:dir "SE"   :flags #x0000  :dest "trail-1")
+        (:dir "S"    :flags #x0000  :dest "trail-1")
+        (:dir "SW"   :flags #x0000  :dest "4")
+        (:dir "W"    :flags #x0000  :dest "106")
+        (:dir "NW"   :flags #x0000  :dest "107")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a large forest.  There appears to be some clearing to the southeast.~%"
+    :short "You are in a large forest.~%")
+(:room "trail-2" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "51")
+        (:dir "NE"   :flags #x0000  :dest "51")
+        (:dir "E"    :flags #x0000  :dest "road-1")
+        (:dir "SE"   :flags #x0000  :dest "67")
+        (:dir "S"    :flags #x0000  :dest "66")
+        (:dir "SW"   :flags #x0000  :dest "trail-1")
+        (:dir "W"    :flags #x0000  :dest "58")
+        (:dir "NW"   :flags #x0000  :dest "50")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are standing on a section of trail through a large forest.  The has a bend 
+here.  It extends to the east and the southwest.  There appears to be some 
+clearing both to the east and to the southwest.~%"
+    :short "You are standing on a section of trail through a large forest.~%")
+(:room "road-1" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "road-2")
+        (:dir "NE"   :flags #x0000  :dest "53")
+        (:dir "E"    :flags #x0000  :dest "61")
+        (:dir "SE"   :flags #x0000  :dest "61")
+        (:dir "S"    :flags #x0000  :dest "67")
+        (:dir "SW"   :flags #x0000  :dest "66")
+        (:dir "W"    :flags #x0000  :dest "58")
+        (:dir "NW"   :flags #x0000  :dest "51")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You have reached the end of the road.  There are some old tire tracks where 
+some people have turned around, but the road is starting to be somewhat 
+overgrown.  The road extends to the north.  You can also make out a trail 
+leading off to the west.~%"
+    :short "You have reached the end of the road.~%")
+(:room "61" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "53")
+        (:dir "NE"   :flags #x0000  :dest "54")
+        (:dir "E"    :flags #x0000  :dest "62")
+        (:dir "SE"   :flags #x0000  :dest "69")
+        (:dir "S"    :flags #x0000  :dest "67")
+        (:dir "SW"   :flags #x0000  :dest "67")
+        (:dir "W"    :flags #x0000  :dest "road-1")
+        (:dir "NW"   :flags #x0000  :dest "road-2")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a small north pointing finger of forest.  There is a clearing to the 
+east and a road to the west.  More forest is to the north and south.~%"
+    :short "You are in a small north pointing finger of forest.~%")
+(:room "62" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "54")
+        (:dir "NE"   :flags #x0000  :dest "55")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :dest "70")
+        (:dir "S"    :flags #x0000  :dest "69")
+        (:dir "SW"   :flags #x0000  :dest "61")
+        (:dir "W"    :flags #x0000  :dest "61")
+        (:dir "NW"   :flags #x0000  :dest "53")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the clearing to the west of an abandoned old house.  There is forest 
+further to the west.  From this angle, you can see no way into the house.  
+There is a small grove of trees to the south.~%"
+    :short "You are in the clearing to the west of an abandoned old house.~%")
+(:room "63" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "71")
+        (:dir "NE"   :flags #x0000  :dest "72")
+        (:dir "E"    :flags #x0000  :dest "152")
+        (:dir "SE"   :flags #x0000  :dest "139")
+        (:dir "S"    :flags #x0000  :dest "139")
+        (:dir "SW"   :flags #x0000  :dest "138")
+        (:dir "W"    :flags #x0000  :dest "36")
+        (:dir "NW"   :flags #x0000  :dest "69")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the north fringes of a large forest.  It looks like there is some 
+clearing to the north.~%"
+    :short "You are in the north fringes of a large forest.~%")
+(:room "64" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "56")
+        (:dir "NE"   :flags #x0000  :dest "57")
+        (:dir "E"    :flags #x0000  :dest "65")
+        (:dir "SE"   :flags #x0000  :dest "72")
+        (:dir "S"    :flags #x0000  :dest "71")
+        (:dir "SW"   :flags #x0000  :dest "70")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :dest "55")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the clearing to the east of an abandoned old house.  There is forest 
+further to the east.  From this angle, you can see no way into the house.  
+There is also more forest to the south.~%"
+    :short "You are in the clearing to the east of an abandoned old house.~%")
+(:room "65" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "57")
+        (:dir "NE"   :flags #x0000  :dest "146")
+        (:dir "E"    :flags #x0000  :dest "149")
+        (:dir "SE"   :flags #x0000  :dest "152")
+        (:dir "S"    :flags #x0000  :dest "72")
+        (:dir "SW"   :flags #x0000  :dest "71")
+        (:dir "W"    :flags #x0000  :dest "64")
+        (:dir "NW"   :flags #x0000  :dest "56")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the western fringes of a large forest.  There is a clearing to the 
+east.~%"
+    :short "You are in the western fringes of a large forest.~%")
+(:room "66" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "trail-2")
+        (:dir "NE"   :flags #x0000  :dest "road-1")
+        (:dir "E"    :flags #x0000  :dest "67")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "trail-1")
+        (:dir "NW"   :flags #x0000  :dest "trail-2")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a large forest.  It looks like there might be a trail to the 
+northeast.~%"
+    :short "You are in a large forest.~%")
+(:room "67" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "road-1")
+        (:dir "NE"   :flags #x0000  :dest "61")
+        (:dir "E"    :flags #x0000  :dest "61")
+        (:dir "SE"   :flags #x0000  :dest "35")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "66")
+        (:dir "NW"   :flags #x0000  :dest "trail-2")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a large forest.  It looks like there might be a road to the north.~%"
+    :short "You are in a large forest.~%")
+(:room "crypt-1" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "69")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0001  :dest "crypt-2" object="lid-1" closed="4"))
+    :long "You have entered a small crypt.  There is a stone sarcophagi in the middle of 
+the room.  On the wall of the crypt is a frieze depicting what would seem to be 
+major events from your life.  However, on closer inspection, many of the events 
+depicted seem to be of little significance or accuracy.  It does look like you
+may, with some effort, be able to open the sarcophagi.~%"
+    :short "You have entered a small crypt.~%")
+(:room "crypt-2" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "crypt-3")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0001  :dest "crypt-1" object="lid-2" closed="lid-closed")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are at the base of some stairs.  A low passage extends to the west.~%"
+    :short "You are at the base of some stairs.~%")
+(:room "crypt-3" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "crypt-2")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "crypt-4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a low passage that extends to the east and west.~%"
+    :short "You are in a low east-west passage.~%")
+(:room "crypt-4" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "crypt-3")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "crypt-5")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You have reached a peculiar looking entrance/exit.  There are massive pillars
+on each side with large stone arches between them.  Carved on the pillars are what
+appear to be people lightly dozing.  You can continue to the east or the west.~%"
+    :short "You are at the gates of light slumber.~%")
+(:room "crypt-5" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "crypt-4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You have reached a peculiar looking entrance/exit.  There are massive pillars
+on each side with large stone arches between them.  Carved on the pillars are what
+appear to be people lightly dozing.  You can continue to the east or the west.  To
+the south appears to be the entrance to a cave.  You can see some flickering light
+in the cave.~%"
+    :short "You are at the gates of light slumber.~%")
+(:room "69" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "62")
+        (:dir "NE"   :flags #x0000  :dest "70")
+        (:dir "E"    :flags #x0000  :dest "70")
+        (:dir "SE"   :flags #x0000  :dest "36")
+        (:dir "S"    :flags #x0000  :dest "35")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "crypt-1")
+        (:dir "NW"   :flags #x0000  :dest "61")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a small grove of trees.  There is a clearing to the east and north.  
+To the south in a large forest.  To the west, you can see the entrance of a 
+small crypt.  Your name and today&apos;s date is inscribed in the plaque by the 
+entrance.  You get the uneasy feeling that someone is trying to play with your 
+mind.~%"
+    :short "You are in a small grove of trees.~%")
+(:room "70" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-9" object="window-1" closed="window-closed")
+        (:dir "NE"   :flags #x0000  :dest "64")
+        (:dir "E"    :flags #x0000  :dest "71")
+        (:dir "SE"   :flags #x0000  :dest "63")
+        (:dir "S"    :flags #x0000  :dest "36")
+        (:dir "SW"   :flags #x0000  :dest "35")
+        (:dir "W"    :flags #x0000  :dest "69")
+        (:dir "NW"   :flags #x0000  :dest "62")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are standing behind an abandoned house.  It looks like you might be able to 
+force one of the windows open to enter the house.  To the west is a small grove
+of trees.~%"
+    :short "You are standing behind an abandoned house.~%")
+(:room "71" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "64")
+        (:dir "NE"   :flags #x0000  :dest "65")
+        (:dir "E"    :flags #x0000  :dest "72")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "63")
+        (:dir "SW"   :flags #x0000  :dest "36")
+        (:dir "W"    :flags #x0000  :dest "70")
+        (:dir "NW"   :flags #x0000  :dest "70")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are at the northwest edge of a large forest.  There is clearing both to the 
+north and west.~%"
+    :short "You are at the northwest edge of a large forest.~%")
+(:room "72" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "65")
+        (:dir "NE"   :flags #x0000  :dest "149")
+        (:dir "E"    :flags #x0000  :dest "152")
+        (:dir "SE"   :flags #x0000  :dest "152")
+        (:dir "S"    :flags #x0000  :dest "139")
+        (:dir "SW"   :flags #x0000  :dest "63")
+        (:dir "W"    :flags #x0000  :dest "71")
+        (:dir "NW"   :flags #x0000  :dest "64")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a large forest.  You can see the forest thin off to the northwest.~%"
+    :short "You are in a large forest.~%")
+(:room "house-1" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "house-4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a small, dusty walk-in closet off the west end of the hall.  The 
+smell of toxic cleaners is especially strong here.~%"
+    :short "You are in a small, dusty walk-in closet off the west end of the hall.~%")
+(:room "house-2" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "55" object="door-1" closed="door-closed")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "house-5")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a living room.  Either the former tenants have been long gone, or 
+they have been very careful to avoid disturbing the dust and cobwebs.~%"
+    :short "You are in a living room.~%")
+(:room "house-3" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "56")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "house-6")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a garage.  The construction of this part of the house is not quite 
+up to the standard building codes.  In a number of places, you can see light 
+shining throughout the walls and the roof.  There is a door to the south that 
+might lead into the rest of the house.~%"
+    :short "You are in a garage.~%")
+(:room "house-4" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-1")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "house-5")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "house-8")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :dest "house-12")
+        (:dir "DOWN" :flags #x0000  :dest "house-16"))
+    :long "You are at the west end of the hall.  You can see a rickety staircase leading 
+both up and down.~%"
+    :short "You are at the west end of the hall.~%")
+(:room "house-5" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-2")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "house-6")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "house-9")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "house-4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are at the center of an east-west hall.  To the north, you can enter the 
+living room, and to the south, a back room.~%"
+    :short "You are at the center of an east-west hall.~%")
+(:room "house-6" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-3")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "house-10")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "house-5")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are at the east end of the hall.  The garage is to the north, and the 
+kitchen to the south.~%"
+    :short "You are at the east end of the hall.~%")
+(:room "house-7" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "house-8")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a closet off of the bedroom.  The bedroom is to the east.~%"
+    :short "You are in a closet off of the bedroom.~%")
+(:room "house-8" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :dest "house-7")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the bedroom.  At least, it looks like a bedroom, though the 
+conspicuous absence of a bed might tend to refute this conclusion.  The exit is 
+to the north.  You can also see a closet at the west side of the room.~%"
+    :short "You are in the bedroom.~%")
+(:room "house-9" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-5")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "70" object="window-1" closed="window-closed")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a back room.  The door is on the north.  It also looks like you 
+could exit the house through a window here.~%"
+    :short "You are in a back room.~%")
+(:room "house-10" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-6")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the kitchen.  There are marks on the floor where some major 
+appliances were removed after the cockroaches had developed an advanced 
+civilization.~%"
+    :short "You are in the kitchen.~%")
+(:room "house-11" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "house-13")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a storage room in the attic.  There is not much to see here.~%"
+    :short "You are in a storage room in the attic.~%")
+(:room "house-12" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "house-13")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :dest "house-4"))
+    :long "You are at the top of the stairs, in the attic.  You can see a small room to 
+the east.~%"
+    :short "You are at the top of the stairs, in the attic.~%")
+(:room "house-13" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-11")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "house-14")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "house-15")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "house-12")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a small room in the attic.  The stairs are to the west.  There are 
+also doors to the north, east, and south.~%"
+    :short "You are in a small room in the attic.~%")
+(:room "house-14" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "house-13")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in what appears to be a library.  There are shelves along all of the 
+walls, except for the space occupied by the window and the door.~%"
+    :short "You are in a library.~%")
+(:room "house-15" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-13")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a bedroom in the attic.~%"
+    :short "You are in a bedroom in the attic.~%")
+(:room "88" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "95" closed="4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in large room with a curiously raised tile floor.  The bulk of the room 
+is occupied by several rows of chest high metal cabinets.~%"
+    :short "You are in large room with a curiously raised tile floor.~%")
+(:room "house-16" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "house-17")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :dest "house-4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are at the bottom of the stairs.  You can see a root cellar to the east.~%"
+    :short "You are at the bottom of the stairs.~%")
+(:room "house-17" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "house-18")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "house-16")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a root cellar.  It is slightly chilly in here.  You can also smell 
+the typical musty smell associated with root cellars.  There is a workshop to 
+the south.  There also appears to be a small passage to the east.~%"
+    :short "You are in a root cellar.~%")
+(:room "house-18" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "house-17")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :dest "92"))
+    :long "You are in a long, low room.  Along the north wall is a rack containing a 
+number of dusty bottles.  Along the south wall is a row of large barrels 
+mounted on low stands.  Each barrel has a spigot near the bottom.  Everything 
+is covered with dust and cobwebs.~%"
+    :short "You are in a wine cellar.~%")
+(:room "92" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "93")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :dest "house-18" closed="4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are at the west end of a tunnel below the wine cellar.~%"
+    :short "You are at the west end of a tunnel.~%")
+(:room "93" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "94")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0008  :dest "92")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in an east-west tunnel.~%"
+    :short "You are in an east-west tunnel.~%")
+(:room "94" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "95")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "99")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "93")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in what appears to be an alchemical laboratory.  In addition to some 
+esoteric instruments of natural philosophy, there are a number of cabalistic 
+inscriptions on the walls.  There is also a chart depicting all the possible 
+combinations of the four elements.~%"
+    :short "You are in what appears to be an alchemical laboratory.~%")
+(:room "95" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "88")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "100")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "94")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a curiously furnished room.  Along the walls are several desks each 
+with several strangely curved dark windows.  Mounted higher on the walls are 
+other larger dark windows.  Mounted in the middle of the room is a large 
+crystal map with a number of strange symbols marked on it.  You can see doors 
+to the north, west, and south.~%"
+    :short "You are in a curiously furnished room.~%")
+(:room "house-19" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :dest "house-17")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "house-20")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a cluttered workshop.  The floor is covered with shavings and 
+sawdust.  There are some old tools mounted on the workbench.  You can exit to 
+the north.  There is also another room to the east.~%"
+    :short "You are in a cluttered workshop.~%")
+(:room "house-20" :flags #x00000200 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "house-19")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a crowded storage room.  The air is heavy with the smell of paint, 
+toxic cleaners, and other household hazardous products.  You can find fresher 
+air to the west.~%"
+    :short "You are in a crowded storage room.~%")
+(:room "98" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "99")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in what appears to be a large file storage room.  The office is to the 
+east.~%"
+    :short "You are in what appears to be a large file storage room.~%")
+(:room "99" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "94")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "98")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in an abandoned office.  The exit is to the north.  There also appears 
+to be another room to the west.~%"
+    :short "You are in an abandoned office.~%")
+(:room "100" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "198")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in a curious room.  There is a raised circle in the center of the room, 
+and a small pedestal mounted consol off to one side.  It is unclear just what 
+sort of mystic rites would be performed here.  The door is to the north.~%"
+    :short "You are in a curious room.~%")
+(:room "101" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "102")
+        (:dir "NE"   :flags #x0000  :dest "102")
+        (:dir "E"    :flags #x0000  :dest "102")
+        (:dir "SE"   :flags #x0000  :dest "105")
+        (:dir "S"    :flags #x0000  :dest "104")
+        (:dir "SW"   :flags #x0000  :dest "104")
+        (:dir "W"    :flags #x0000  :dest "107")
+        (:dir "NW"   :flags #x0000  :dest "109")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "102" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "103")
+        (:dir "NE"   :flags #x0000  :dest "101")
+        (:dir "E"    :flags #x0000  :dest "103")
+        (:dir "SE"   :flags #x0000  :dest "106")
+        (:dir "S"    :flags #x0000  :dest "105")
+        (:dir "SW"   :flags #x0000  :dest "104")
+        (:dir "W"    :flags #x0000  :dest "101")
+        (:dir "NW"   :flags #x0000  :dest "103")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "103" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "101")
+        (:dir "NE"   :flags #x0000  :dest "118")
+        (:dir "E"    :flags #x0000  :dest "106")
+        (:dir "SE"   :flags #x0000  :dest "106")
+        (:dir "S"    :flags #x0000  :dest "106")
+        (:dir "SW"   :flags #x0000  :dest "105")
+        (:dir "W"    :flags #x0000  :dest "102")
+        (:dir "NW"   :flags #x0000  :dest "102")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "104" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "101")
+        (:dir "NE"   :flags #x0000  :dest "102")
+        (:dir "E"    :flags #x0000  :dest "105")
+        (:dir "SE"   :flags #x0000  :dest "108")
+        (:dir "S"    :flags #x0000  :dest "107")
+        (:dir "SW"   :flags #x0000  :dest "101")
+        (:dir "W"    :flags #x0000  :dest "101")
+        (:dir "NW"   :flags #x0000  :dest "107")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "105" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "102")
+        (:dir "NE"   :flags #x0000  :dest "103")
+        (:dir "E"    :flags #x0000  :dest "106")
+        (:dir "SE"   :flags #x0000  :dest "109")
+        (:dir "S"    :flags #x0000  :dest "108")
+        (:dir "SW"   :flags #x0000  :dest "107")
+        (:dir "W"    :flags #x0000  :dest "104")
+        (:dir "NW"   :flags #x0000  :dest "101")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "106" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "103")
+        (:dir "NE"   :flags #x0000  :dest "109")
+        (:dir "E"    :flags #x0000  :dest "109")
+        (:dir "SE"   :flags #x0000  :dest "103")
+        (:dir "S"    :flags #x0000  :dest "109")
+        (:dir "SW"   :flags #x0000  :dest "108")
+        (:dir "W"    :flags #x0000  :dest "105")
+        (:dir "NW"   :flags #x0000  :dest "102")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "107" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "104")
+        (:dir "NE"   :flags #x0000  :dest "105")
+        (:dir "E"    :flags #x0000  :dest "108")
+        (:dir "SE"   :flags #x0000  :dest "108")
+        (:dir "S"    :flags #x0000  :dest "109")
+        (:dir "SW"   :flags #x0000  :dest "2")
+        (:dir "W"    :flags #x0000  :dest "104")
+        (:dir "NW"   :flags #x0000  :dest "104")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "108" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "105")
+        (:dir "NE"   :flags #x0000  :dest "106")
+        (:dir "E"    :flags #x0000  :dest "109")
+        (:dir "SE"   :flags #x0000  :dest "107")
+        (:dir "S"    :flags #x0000  :dest "107")
+        (:dir "SW"   :flags #x0000  :dest "109")
+        (:dir "W"    :flags #x0000  :dest "107")
+        (:dir "NW"   :flags #x0000  :dest "104")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "109" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "106")
+        (:dir "NE"   :flags #x0000  :dest "106")
+        (:dir "E"    :flags #x0000  :dest "103")
+        (:dir "SE"   :flags #x0000  :dest "4")
+        (:dir "S"    :flags #x0000  :dest "108")
+        (:dir "SW"   :flags #x0000  :dest "108")
+        (:dir "W"    :flags #x0000  :dest "108")
+        (:dir "NW"   :flags #x0000  :dest "105")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "110" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "111")
+        (:dir "NE"   :flags #x0000  :dest "111")
+        (:dir "E"    :flags #x0000  :dest "111")
+        (:dir "SE"   :flags #x0000  :dest "114")
+        (:dir "S"    :flags #x0000  :dest "113")
+        (:dir "SW"   :flags #x0000  :dest "113")
+        (:dir "W"    :flags #x0000  :dest "116")
+        (:dir "NW"   :flags #x0000  :dest "112")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "111" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "112")
+        (:dir "NE"   :flags #x0000  :dest "110")
+        (:dir "E"    :flags #x0000  :dest "112")
+        (:dir "SE"   :flags #x0000  :dest "115")
+        (:dir "S"    :flags #x0000  :dest "114")
+        (:dir "SW"   :flags #x0000  :dest "113")
+        (:dir "W"    :flags #x0000  :dest "110")
+        (:dir "NW"   :flags #x0000  :dest "112")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "112" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "110")
+        (:dir "NE"   :flags #x0000  :dest "119")
+        (:dir "E"    :flags #x0000  :dest "115")
+        (:dir "SE"   :flags #x0000  :dest "115")
+        (:dir "S"    :flags #x0000  :dest "115")
+        (:dir "SW"   :flags #x0000  :dest "114")
+        (:dir "W"    :flags #x0000  :dest "111")
+        (:dir "NW"   :flags #x0000  :dest "111")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "113" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "110")
+        (:dir "NE"   :flags #x0000  :dest "111")
+        (:dir "E"    :flags #x0000  :dest "114")
+        (:dir "SE"   :flags #x0000  :dest "117")
+        (:dir "S"    :flags #x0000  :dest "116")
+        (:dir "SW"   :flags #x0000  :dest "110")
+        (:dir "W"    :flags #x0000  :dest "110")
+        (:dir "NW"   :flags #x0000  :dest "116")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "114" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "111")
+        (:dir "NE"   :flags #x0000  :dest "112")
+        (:dir "E"    :flags #x0000  :dest "115")
+        (:dir "SE"   :flags #x0000  :dest "118")
+        (:dir "S"    :flags #x0000  :dest "117")
+        (:dir "SW"   :flags #x0000  :dest "116")
+        (:dir "W"    :flags #x0000  :dest "113")
+        (:dir "NW"   :flags #x0000  :dest "110")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "115" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "112")
+        (:dir "NE"   :flags #x0000  :dest "118")
+        (:dir "E"    :flags #x0000  :dest "118")
+        (:dir "SE"   :flags #x0000  :dest "112")
+        (:dir "S"    :flags #x0000  :dest "118")
+        (:dir "SW"   :flags #x0000  :dest "117")
+        (:dir "W"    :flags #x0000  :dest "114")
+        (:dir "NW"   :flags #x0000  :dest "111")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "116" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "113")
+        (:dir "NE"   :flags #x0000  :dest "114")
+        (:dir "E"    :flags #x0000  :dest "117")
+        (:dir "SE"   :flags #x0000  :dest "117")
+        (:dir "S"    :flags #x0000  :dest "118")
+        (:dir "SW"   :flags #x0000  :dest "103")
+        (:dir "W"    :flags #x0000  :dest "113")
+        (:dir "NW"   :flags #x0000  :dest "113")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "117" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "114")
+        (:dir "NE"   :flags #x0000  :dest "115")
+        (:dir "E"    :flags #x0000  :dest "118")
+        (:dir "SE"   :flags #x0000  :dest "116")
+        (:dir "S"    :flags #x0000  :dest "116")
+        (:dir "SW"   :flags #x0000  :dest "118")
+        (:dir "W"    :flags #x0000  :dest "116")
+        (:dir "NW"   :flags #x0000  :dest "113")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "118" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "115")
+        (:dir "NE"   :flags #x0000  :dest "115")
+        (:dir "E"    :flags #x0000  :dest "112")
+        (:dir "SE"   :flags #x0000  :dest "37")
+        (:dir "S"    :flags #x0000  :dest "117")
+        (:dir "SW"   :flags #x0000  :dest "117")
+        (:dir "W"    :flags #x0000  :dest "117")
+        (:dir "NW"   :flags #x0000  :dest "114")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "119" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "120")
+        (:dir "NE"   :flags #x0000  :dest "112")
+        (:dir "E"    :flags #x0000  :dest "120")
+        (:dir "SE"   :flags #x0000  :dest "123")
+        (:dir "S"    :flags #x0000  :dest "122")
+        (:dir "SW"   :flags #x0000  :dest "122")
+        (:dir "W"    :flags #x0000  :dest "125")
+        (:dir "NW"   :flags #x0000  :dest "121")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "120" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "121")
+        (:dir "NE"   :flags #x0000  :dest "119")
+        (:dir "E"    :flags #x0000  :dest "121")
+        (:dir "SE"   :flags #x0000  :dest "124")
+        (:dir "S"    :flags #x0000  :dest "123")
+        (:dir "SW"   :flags #x0000  :dest "122")
+        (:dir "W"    :flags #x0000  :dest "119")
+        (:dir "NW"   :flags #x0000  :dest "121")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "121" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "119")
+        (:dir "NE"   :flags #x0000  :dest "110")
+        (:dir "E"    :flags #x0000  :dest "124")
+        (:dir "SE"   :flags #x0000  :dest "124")
+        (:dir "S"    :flags #x0000  :dest "124")
+        (:dir "SW"   :flags #x0000  :dest "123")
+        (:dir "W"    :flags #x0000  :dest "120")
+        (:dir "NW"   :flags #x0000  :dest "120")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "122" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "119")
+        (:dir "NE"   :flags #x0000  :dest "120")
+        (:dir "E"    :flags #x0000  :dest "123")
+        (:dir "SE"   :flags #x0000  :dest "126")
+        (:dir "S"    :flags #x0000  :dest "125")
+        (:dir "SW"   :flags #x0000  :dest "119")
+        (:dir "W"    :flags #x0000  :dest "119")
+        (:dir "NW"   :flags #x0000  :dest "125")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "123" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "120")
+        (:dir "NE"   :flags #x0000  :dest "121")
+        (:dir "E"    :flags #x0000  :dest "124")
+        (:dir "SE"   :flags #x0000  :dest "127")
+        (:dir "S"    :flags #x0000  :dest "126")
+        (:dir "SW"   :flags #x0000  :dest "125")
+        (:dir "W"    :flags #x0000  :dest "122")
+        (:dir "NW"   :flags #x0000  :dest "119")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "124" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "121")
+        (:dir "NE"   :flags #x0000  :dest "127")
+        (:dir "E"    :flags #x0000  :dest "127")
+        (:dir "SE"   :flags #x0000  :dest "121")
+        (:dir "S"    :flags #x0000  :dest "127")
+        (:dir "SW"   :flags #x0000  :dest "126")
+        (:dir "W"    :flags #x0000  :dest "123")
+        (:dir "NW"   :flags #x0000  :dest "120")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "125" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "122")
+        (:dir "NE"   :flags #x0000  :dest "123")
+        (:dir "E"    :flags #x0000  :dest "126")
+        (:dir "SE"   :flags #x0000  :dest "126")
+        (:dir "S"    :flags #x0000  :dest "127")
+        (:dir "SW"   :flags #x0000  :dest "38")
+        (:dir "W"    :flags #x0000  :dest "122")
+        (:dir "NW"   :flags #x0000  :dest "122")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "126" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "123")
+        (:dir "NE"   :flags #x0000  :dest "124")
+        (:dir "E"    :flags #x0000  :dest "127")
+        (:dir "SE"   :flags #x0000  :dest "125")
+        (:dir "S"    :flags #x0000  :dest "125")
+        (:dir "SW"   :flags #x0000  :dest "127")
+        (:dir "W"    :flags #x0000  :dest "125")
+        (:dir "NW"   :flags #x0000  :dest "122")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "127" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "124")
+        (:dir "NE"   :flags #x0000  :dest "124")
+        (:dir "E"    :flags #x0000  :dest "121")
+        (:dir "SE"   :flags #x0000  :dest "42")
+        (:dir "S"    :flags #x0000  :dest "126")
+        (:dir "SW"   :flags #x0000  :dest "126")
+        (:dir "W"    :flags #x0000  :dest "126")
+        (:dir "NW"   :flags #x0000  :dest "123")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "128" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "129")
+        (:dir "NE"   :flags #x0000  :dest "129")
+        (:dir "E"    :flags #x0000  :dest "129")
+        (:dir "SE"   :flags #x0000  :dest "132")
+        (:dir "S"    :flags #x0000  :dest "131")
+        (:dir "SW"   :flags #x0000  :dest "131")
+        (:dir "W"    :flags #x0000  :dest "134")
+        (:dir "NW"   :flags #x0000  :dest "10")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "129" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "130")
+        (:dir "NE"   :flags #x0000  :dest "128")
+        (:dir "E"    :flags #x0000  :dest "130")
+        (:dir "SE"   :flags #x0000  :dest "133")
+        (:dir "S"    :flags #x0000  :dest "132")
+        (:dir "SW"   :flags #x0000  :dest "131")
+        (:dir "W"    :flags #x0000  :dest "128")
+        (:dir "NW"   :flags #x0000  :dest "130")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "130" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "128")
+        (:dir "NE"   :flags #x0000  :dest "35")
+        (:dir "E"    :flags #x0000  :dest "133")
+        (:dir "SE"   :flags #x0000  :dest "133")
+        (:dir "S"    :flags #x0000  :dest "133")
+        (:dir "SW"   :flags #x0000  :dest "132")
+        (:dir "W"    :flags #x0000  :dest "129")
+        (:dir "NW"   :flags #x0000  :dest "129")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "131" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "128")
+        (:dir "NE"   :flags #x0000  :dest "129")
+        (:dir "E"    :flags #x0000  :dest "132")
+        (:dir "SE"   :flags #x0000  :dest "135")
+        (:dir "S"    :flags #x0000  :dest "134")
+        (:dir "SW"   :flags #x0000  :dest "128")
+        (:dir "W"    :flags #x0000  :dest "128")
+        (:dir "NW"   :flags #x0000  :dest "134")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "132" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "129")
+        (:dir "NE"   :flags #x0000  :dest "130")
+        (:dir "E"    :flags #x0000  :dest "133")
+        (:dir "SE"   :flags #x0000  :dest "136")
+        (:dir "S"    :flags #x0000  :dest "135")
+        (:dir "SW"   :flags #x0000  :dest "134")
+        (:dir "W"    :flags #x0000  :dest "131")
+        (:dir "NW"   :flags #x0000  :dest "128")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "133" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "130")
+        (:dir "NE"   :flags #x0000  :dest "136")
+        (:dir "E"    :flags #x0000  :dest "136")
+        (:dir "SE"   :flags #x0000  :dest "130")
+        (:dir "S"    :flags #x0000  :dest "136")
+        (:dir "SW"   :flags #x0000  :dest "135")
+        (:dir "W"    :flags #x0000  :dest "132")
+        (:dir "NW"   :flags #x0000  :dest "129")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "134" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "131")
+        (:dir "NE"   :flags #x0000  :dest "132")
+        (:dir "E"    :flags #x0000  :dest "135")
+        (:dir "SE"   :flags #x0000  :dest "135")
+        (:dir "S"    :flags #x0000  :dest "136")
+        (:dir "SW"   :flags #x0000  :dest "19")
+        (:dir "W"    :flags #x0000  :dest "131")
+        (:dir "NW"   :flags #x0000  :dest "131")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "135" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "132")
+        (:dir "NE"   :flags #x0000  :dest "133")
+        (:dir "E"    :flags #x0000  :dest "136")
+        (:dir "SE"   :flags #x0000  :dest "134")
+        (:dir "S"    :flags #x0000  :dest "134")
+        (:dir "SW"   :flags #x0000  :dest "136")
+        (:dir "W"    :flags #x0000  :dest "134")
+        (:dir "NW"   :flags #x0000  :dest "131")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "136" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "133")
+        (:dir "NE"   :flags #x0000  :dest "133")
+        (:dir "E"    :flags #x0000  :dest "130")
+        (:dir "SE"   :flags #x0000  :dest "137")
+        (:dir "S"    :flags #x0000  :dest "135")
+        (:dir "SW"   :flags #x0000  :dest "135")
+        (:dir "W"    :flags #x0000  :dest "135")
+        (:dir "NW"   :flags #x0000  :dest "132")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "137" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "138")
+        (:dir "NE"   :flags #x0000  :dest "138")
+        (:dir "E"    :flags #x0000  :dest "138")
+        (:dir "SE"   :flags #x0000  :dest "141")
+        (:dir "S"    :flags #x0000  :dest "140")
+        (:dir "SW"   :flags #x0000  :dest "140")
+        (:dir "W"    :flags #x0000  :dest "143")
+        (:dir "NW"   :flags #x0000  :dest "67")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "138" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "139")
+        (:dir "NE"   :flags #x0000  :dest "137")
+        (:dir "E"    :flags #x0000  :dest "139")
+        (:dir "SE"   :flags #x0000  :dest "142")
+        (:dir "S"    :flags #x0000  :dest "141")
+        (:dir "SW"   :flags #x0000  :dest "140")
+        (:dir "W"    :flags #x0000  :dest "137")
+        (:dir "NW"   :flags #x0000  :dest "139")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "139" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "137")
+        (:dir "NE"   :flags #x0000  :dest "63")
+        (:dir "E"    :flags #x0000  :dest "142")
+        (:dir "SE"   :flags #x0000  :dest "142")
+        (:dir "S"    :flags #x0000  :dest "142")
+        (:dir "SW"   :flags #x0000  :dest "141")
+        (:dir "W"    :flags #x0000  :dest "138")
+        (:dir "NW"   :flags #x0000  :dest "138")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "140" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "137")
+        (:dir "NE"   :flags #x0000  :dest "138")
+        (:dir "E"    :flags #x0000  :dest "141")
+        (:dir "SE"   :flags #x0000  :dest "144")
+        (:dir "S"    :flags #x0000  :dest "143")
+        (:dir "SW"   :flags #x0000  :dest "137")
+        (:dir "W"    :flags #x0000  :dest "137")
+        (:dir "NW"   :flags #x0000  :dest "143")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "141" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "138")
+        (:dir "NE"   :flags #x0000  :dest "139")
+        (:dir "E"    :flags #x0000  :dest "142")
+        (:dir "SE"   :flags #x0000  :dest "145")
+        (:dir "S"    :flags #x0000  :dest "144")
+        (:dir "SW"   :flags #x0000  :dest "143")
+        (:dir "W"    :flags #x0000  :dest "140")
+        (:dir "NW"   :flags #x0000  :dest "137")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "142" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "139")
+        (:dir "NE"   :flags #x0000  :dest "145")
+        (:dir "E"    :flags #x0000  :dest "145")
+        (:dir "SE"   :flags #x0000  :dest "139")
+        (:dir "S"    :flags #x0000  :dest "145")
+        (:dir "SW"   :flags #x0000  :dest "144")
+        (:dir "W"    :flags #x0000  :dest "141")
+        (:dir "NW"   :flags #x0000  :dest "138")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "143" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "140")
+        (:dir "NE"   :flags #x0000  :dest "141")
+        (:dir "E"    :flags #x0000  :dest "144")
+        (:dir "SE"   :flags #x0000  :dest "144")
+        (:dir "S"    :flags #x0000  :dest "145")
+        (:dir "SW"   :flags #x0000  :dest "136")
+        (:dir "W"    :flags #x0000  :dest "140")
+        (:dir "NW"   :flags #x0000  :dest "140")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "144" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "141")
+        (:dir "NE"   :flags #x0000  :dest "142")
+        (:dir "E"    :flags #x0000  :dest "145")
+        (:dir "SE"   :flags #x0000  :dest "143")
+        (:dir "S"    :flags #x0000  :dest "143")
+        (:dir "SW"   :flags #x0000  :dest "145")
+        (:dir "W"    :flags #x0000  :dest "143")
+        (:dir "NW"   :flags #x0000  :dest "140")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "145" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "142")
+        (:dir "NE"   :flags #x0000  :dest "142")
+        (:dir "E"    :flags #x0000  :dest "139")
+        (:dir "SE"   :flags #x0000  :dest "154")
+        (:dir "S"    :flags #x0000  :dest "144")
+        (:dir "SW"   :flags #x0000  :dest "144")
+        (:dir "W"    :flags #x0000  :dest "144")
+        (:dir "NW"   :flags #x0000  :dest "141")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "146" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "147")
+        (:dir "NE"   :flags #x0000  :dest "139")
+        (:dir "E"    :flags #x0000  :dest "147")
+        (:dir "SE"   :flags #x0000  :dest "150")
+        (:dir "S"    :flags #x0000  :dest "149")
+        (:dir "SW"   :flags #x0000  :dest "149")
+        (:dir "W"    :flags #x0000  :dest "152")
+        (:dir "NW"   :flags #x0000  :dest "road-7")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "147" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "148")
+        (:dir "NE"   :flags #x0000  :dest "146")
+        (:dir "E"    :flags #x0000  :dest "148")
+        (:dir "SE"   :flags #x0000  :dest "151")
+        (:dir "S"    :flags #x0000  :dest "150")
+        (:dir "SW"   :flags #x0000  :dest "149")
+        (:dir "W"    :flags #x0000  :dest "146")
+        (:dir "NW"   :flags #x0000  :dest "148")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "148" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "146")
+        (:dir "NE"   :flags #x0000  :dest "152")
+        (:dir "E"    :flags #x0000  :dest "151")
+        (:dir "SE"   :flags #x0000  :dest "151")
+        (:dir "S"    :flags #x0000  :dest "151")
+        (:dir "SW"   :flags #x0000  :dest "150")
+        (:dir "W"    :flags #x0000  :dest "147")
+        (:dir "NW"   :flags #x0000  :dest "147")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "149" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "146")
+        (:dir "NE"   :flags #x0000  :dest "147")
+        (:dir "E"    :flags #x0000  :dest "150")
+        (:dir "SE"   :flags #x0000  :dest "153")
+        (:dir "S"    :flags #x0000  :dest "152")
+        (:dir "SW"   :flags #x0000  :dest "146")
+        (:dir "W"    :flags #x0000  :dest "146")
+        (:dir "NW"   :flags #x0000  :dest "152")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "150" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "147")
+        (:dir "NE"   :flags #x0000  :dest "148")
+        (:dir "E"    :flags #x0000  :dest "151")
+        (:dir "SE"   :flags #x0000  :dest "154")
+        (:dir "S"    :flags #x0000  :dest "153")
+        (:dir "SW"   :flags #x0000  :dest "152")
+        (:dir "W"    :flags #x0000  :dest "149")
+        (:dir "NW"   :flags #x0000  :dest "146")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "151" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "148")
+        (:dir "NE"   :flags #x0000  :dest "154")
+        (:dir "E"    :flags #x0000  :dest "154")
+        (:dir "SE"   :flags #x0000  :dest "148")
+        (:dir "S"    :flags #x0000  :dest "154")
+        (:dir "SW"   :flags #x0000  :dest "153")
+        (:dir "W"    :flags #x0000  :dest "150")
+        (:dir "NW"   :flags #x0000  :dest "147")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "152" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "149")
+        (:dir "NE"   :flags #x0000  :dest "150")
+        (:dir "E"    :flags #x0000  :dest "153")
+        (:dir "SE"   :flags #x0000  :dest "153")
+        (:dir "S"    :flags #x0000  :dest "154")
+        (:dir "SW"   :flags #x0000  :dest "72")
+        (:dir "W"    :flags #x0000  :dest "149")
+        (:dir "NW"   :flags #x0000  :dest "149")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "153" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "150")
+        (:dir "NE"   :flags #x0000  :dest "151")
+        (:dir "E"    :flags #x0000  :dest "154")
+        (:dir "SE"   :flags #x0000  :dest "152")
+        (:dir "S"    :flags #x0000  :dest "152")
+        (:dir "SW"   :flags #x0000  :dest "154")
+        (:dir "W"    :flags #x0000  :dest "152")
+        (:dir "NW"   :flags #x0000  :dest "149")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "154" :flags #x00000300 :exits
+       ((:dir "N"    :flags #x0000  :dest "151")
+        (:dir "NE"   :flags #x0000  :dest "151")
+        (:dir "E"    :flags #x0000  :dest "148")
+        (:dir "SE"   :flags #x0000  :dest "145")
+        (:dir "S"    :flags #x0000  :dest "153")
+        (:dir "SW"   :flags #x0000  :dest "153")
+        (:dir "W"    :flags #x0000  :dest "153")
+        (:dir "NW"   :flags #x0000  :dest "150")
+        (:dir "UP"   :flags #x0000  :closed "try-fly")
+        (:dir "DOWN" :flags #x0000  :closed "karma"))
+    :long "You are in the middle of a large forest.  There are trees in all directions.~%"
+    :short "You are in the middle of a large forest.~%")
+(:room "155" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "163")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a clear bubble underneath the front of the ship.  There are control 
+here which appear to be for the operation of a nearby weapon turret.  
+Unfortunately, the controls are not clearly labeled so that operation under 
+high stress conditions would probably be difficult.  You can exit to the south.~%"
+    :short "You are in a clear bubble with controls for the weapon turret underneath the front
+of the ship.~%")
+(:room "156" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "164")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a tight crawl-way which gives access to many of the sensors mounted 
+on the hull of the ship.  You can exit to the south.~%"
+    :short "You are in a tight crawl-way.~%")
+(:room "157" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "158")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the west end of an engineering lab.  There are numerous electronic 
+instruments scattered around on various tables here.~%"
+    :short "You are in the west end of an engineering lab.~%")
+(:room "158" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "159")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "166")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "157")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the center of an engineering lab.  There is a door to the south.  To 
+the west, you can see several pieces of electronic test equipment.  To the 
+east, you can see some fabrication machinery.  There is a door to the south.~%"
+    :short "You are in the center of an engineering lab.~%")
+(:room "159" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "158")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the east end of an engineering lab.  There is some equipment here 
+for building new machinery.~%"
+    :short "You are in the east end of an engineering lab.~%")
+(:room "160" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "168")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "Oh dear.  It seems that this escape pod has already been jettisoned.  As your 
+air rushes out into the vacuum of space, you can faintly hear a claxon 
+starting.  As you loose consciousness, you can dimly see airtight doors 
+slamming shut to seal off this section of the hall.~%"
+    :short "Oh dear.  It seems that this escape pod has already been jettisoned.  As your 
+air rushes out into the vacuum of space, you can faintly hear a claxon 
+starting.  As you loose consciousness, you can dimly see airtight doors 
+slamming shut to seal off this section of the hall.~%")
+(:room "161" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "169")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a small room.  There seems to be a complete supply of emergency 
+provisions for any number of possible accidents.  Because of this and the 
+presence of some rudimentary controls, I would deduce that this is indeed an 
+escape pod.  You can leave to the south.~%"
+    :short "You are in a small room.~%")
+(:room "162" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :dest "171")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a comfortable office off of the bridge.  Whoever used this office 
+appears to have been somewhat of a neatness freak.  Everything is meticulously 
+tidy.  There are also no superfluous decorations.  You can return to the bridge 
+to the southwest.~%"
+    :short "You are in a comfortable office off of the bridge.~%")
+(:room "163" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "155")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "164" closed="4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :dest "172")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall.  It extends to the southwest and to the east 
+with a door to the north.~%"
+    :short "You are in a section of the hall.~%")
+(:room "164" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "156")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "165")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "163")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the north.~%"
+    :short "You are in a section of the hall.~%")
+(:room "165" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "166")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "175")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "164")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the south.~%"
+    :short "You are in a section of the hall.~%")
+(:room "166" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "158")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "167")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "165")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the north.~%"
+    :short "You are in a section of the hall.~%")
+(:room "167" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "168")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "177")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "166")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the south.~%"
+    :short "You are in a section of the hall.~%")
+(:room "168" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "160")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "169")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "167")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the north.~%"
+    :short "You are in a section of the hall.~%")
+(:room "169" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "161")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "170")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "179")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "168")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall.  It extends to the east and west.  There is a 
+door to the north and to the south.~%"
+    :short "You are in a section of the hall.~%")
+(:room "170" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "180")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "169")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You at the east end of the hall.  It extends to the west.  There is a door to 
+the south.~%"
+    :short "You at the east end of the hall.~%")
+(:room "171" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :dest "162")
+        (:dir "E"    :flags #x0000  :dest "172")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "181")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are at the north side of the bridge.  There is a door to the northeast and 
+one to the east.~%"
+    :short "You are at the north side of the bridge.~%")
+(:room "172" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :dest "163")
+        (:dir "E"    :flags #x0000  :dest "173")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "182")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "171")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+        :long "You are in a section of the hall.  It extends to the northeast and south.  
+There is a door to the east and to the west.~%"
+    :short "You are in a section of the hall.~%")
+(:room "173" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "172")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the tactical control center for this ship.  In the center of the 
+room is a three dimensional situation display with this ship at the center.  
+You can exit to the west.~%"
+    :short "You are in the tactical control center for this ship.~%")
+(:room "174" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "175")
+        (:dir "SE"   :flags #x0000  :dest "185")
+        (:dir "S"    :flags #x0000  :dest "184")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the northwest corner of a large room.  In this room are a large 
+number of stasis containers.  Unfortunately, the labels are illegible, so that 
+is in unclear if the contents of the containers are merely perishable or very 
+hazardous-the two types of goods customarily transported in this fashion.~%"
+    :short "You are in the northwest corner of a large room.~%")
+(:room "175" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "165")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "185")
+        (:dir "SW"   :flags #x0000  :dest "184")
+        (:dir "W"    :flags #x0000  :dest "174")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the northeast corner of a large room.  In this room are a large 
+number of stasis containers.  Unfortunately, the labels are illegible, so that 
+is in unclear if the contents of the containers are merely perishable or very 
+hazardous-the two types of goods customarily transported in this fashion.  
+There is a door to the north.~%"
+    :short "You are in the northeast corner of a large room.~%")
+(:room "176" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "177")
+        (:dir "SE"   :flags #x0000  :dest "187")
+        (:dir "S"    :flags #x0000  :dest "186")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the northwest corner of the main cargo hold.  It appears that most 
+of the cargo has been removed, but scattered around the room are a few damaged 
+containers.~%"
+    :short "You are in the northwest corner of the main cargo hold.~%")
+(:room "177" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "167")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "187")
+        (:dir "SW"   :flags #x0000  :dest "186")
+        (:dir "W"    :flags #x0000  :dest "176")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the northeast corner of the main cargo hold.  It appears that most 
+of the cargo has been removed, but scattered around the room are a few damaged 
+containers.  You can see a door to the north.~%"
+    :short "You are in the northeast corner of the main cargo hold.~%")
+(:room "178" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "179")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the west end of the main electronic equipment bay.  This end 
+contains the master control computer which directs the other control computers.~%"
+    :short "You are in the west end of the main electronic equipment bay.~%")
+(:room "179" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "169")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "178")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the east end of the main electronic equipment bay.  This end 
+contains most of the subsystem control computers.  To the west, you can see the 
+master control computer.  The door is to the north.~%"
+    :short "You are in the east end of the main electronic equipment bay.~%")
+(:room "180" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "170")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "207")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "190")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the north end of the engine room.  To the east is access to the 
+number 2 engine.  There is also a door to the north.~%"
+    :short "You are in the north end of the engine room.~%")
+(:room "181" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "171")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "182")
+        (:dir "SE"   :flags #x0000  :dest "191")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the south end of the bridge.  The is a door to the east and one to 
+the southeast.~%"
+    :short "You are in the south end of the bridge.~%")
+(:room "182" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "172")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "183")
+        (:dir "SE"   :flags #x0000  :dest "192")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "181")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall extending to the north and to the southeast.  
+There are doors to the east and west.~%"
+    :short "You are in a section of the hall extending to the north and to the southeast.~%")
+(:room "183" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "182")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the communication control center.  There is a door to the west.~%"
+    :short "You are in the communication control center.~%")
+(:room "184" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "174")
+        (:dir "NE"   :flags #x0000  :dest "175")
+        (:dir "E"    :flags #x0000  :dest "185")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the southwest corner of a large room.  In this room are a large 
+number of stasis containers.  Unfortunately, the labels are illegible, so that 
+is in unclear if the contents of the containers are merely perishable or very 
+hazardous-the two types of goods customarily transported in this fashion.~%"
+    :short "You are in the southwest corner of a large room.~%")
+(:room "185" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "175")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "194")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "184")
+        (:dir "NW"   :flags #x0000  :dest "174")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the southeast corner of a large room.  In this room are a large 
+number of stasis containers.  Unfortunately, the labels are illegible, so that 
+is in unclear if the contents of the containers are merely perishable or very 
+hazardous-the two types of goods customarily transported in this fashion.  
+There is a door to the south.~%"
+    :short "You are in the southeast corner of a large room.~%")
+(:room "186" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "176")
+        (:dir "NE"   :flags #x0000  :dest "177")
+        (:dir "E"    :flags #x0000  :dest "187")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the southwest corner of the main cargo hold.  It appears that most 
+of the cargo has been removed, but scattered around the room are a few damaged 
+containers.~%"
+    :short "You are in the southwest corner of the main cargo hold.~%")
+(:room "187" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "177")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "196")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "186")
+        (:dir "NW"   :flags #x0000  :dest "176")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the southeast corner of the main cargo hold.  It appears that most 
+of the cargo has been removed, but scattered around the room are a few damaged 
+containers.  You can see a door to the south.~%"
+    :short "You are in the southeast corner of the main cargo hold.~%")
+(:room "188" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "197")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the main engineering control room.  There is equipment for 
+controlling most of the functions of the ship here.~%"
+    :short "You are in the main engineering control room.~%")
+(:room "189" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "198")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a small ready room across the hall from the transporter.  Along the 
+walls are such useful items as weapons and protective clothing.~%"
+    :short "You are in a small ready room across the hall from the transporter.~%")
+(:room "190" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "180")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "208")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "199")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the south end of the engine room.  To the east is access to the 
+number 1 engine.  There is also a door to the south.~%"
+    :short "You are in the south end of the engine room.~%")
+(:room "191" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :dest "181")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a large, luxuriously decorated office to the southeast of the 
+bridge.  Whoever occupied this office seemed to have a taste for the finer 
+things in life.  There is a door to the northwest.~%"
+    :short "You are in a large, luxuriously decorated office.~%")
+(:room "192" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "193")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "200")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :dest "182")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall extending to the northwest and to the east.  
+There is a door to the south.~%"
+    :short "You are in a section of the hall extending to the northwest and to the east.~%")
+(:room "193" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "194")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "201")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "192")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall extending to the east and west.  There is a 
+door to the south.~%"
+    :short "You are in a section of the hall extending to the east and west.~%")
+(:room "194" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "185")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "195")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "193")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall extending to the east and west.  There is a 
+door to the north.~%"
+    :short "You are in a section of the hall extending to the east and west.~%")
+(:room "195" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "196")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "202")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "194")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall extending to the east and west.  There is a 
+door to the south.~%"
+    :short "You are in a section of the hall extending to the east and west.~%")
+(:room "196" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "187")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "197")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "195")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall extending to the east and west.  There is a 
+door to the north.~%"
+    :short "You are in a section of the hall extending to the east and west.~%")
+(:room "197" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "188")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "198")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "196")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall extending to the east and west.  There is a 
+door to the north.~%"
+    :short "You are in a section of the hall extending to the east and west.~%")
+(:room "198" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "189")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "199")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :dest "206")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "197")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a section of the hall extending to the east and west.  There are 
+doors to the north and south.~%"
+    :short "You are in a section of the hall extending to the east and west.~%")
+(:room "199" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "190")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "198")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are at the east end of the hall.  It extends to the west.  There is a door 
+to the north.~%"
+    :short "You are at the east end of the hall.~%")
+(:room "200" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "192")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in a small observation dome on top of the ship.  You can exit to the 
+north.~%"
+    :short "You are in a small observation dome on top of the ship.~%")
+(:room "201" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "193")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "202")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the living area of one of the ships staterooms.  The room extends to 
+the east.  There is also a door to the north.~%"
+    :short "You are in the living area of one of the ships staterooms.~%")
+(:room "202" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "201")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the inner sanctum of the stateroom.  You can exit to the west.~%"
+    :short "You are in the inner sanctum of the stateroom.~%")
+(:room "203" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "195")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "204")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in what appears to have been a cafeteria for the crew of this ship.  To 
+the east, you can see the kitchen.  There is a door to the north.~%"
+    :short "You are in the cafeteria.~%")
+(:room "204" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :dest "205")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "203")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the kitchen.  There are facilities for preparing all sorts of exotic 
+foods.  The dining are is to the west.  You can also see a walk-in freezer to 
+the east.~%"
+    :short "You are in the kitchen.~%")
+(:room "205" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "204")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "It is very cold in here.  Around you, you can see one of the largest ice 
+collections you have ever seen.  Warmer weather is to the west.~%"
+    :short "You are in the freezer.~%")
+(:room "206" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :dest "95")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :closed "4")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the transporter room.  There is a raised circle in the center of the 
+room, and a small pedestal mounted consol off to one side.  The door is to the 
+north.~%"
+    :short "You are in the transporter room.~%")
+(:room "207" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "180")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the access area for engine number 2.  The main engine room is to the 
+west.~%"
+    :short "
+You are in the access area for engine number 2.~%")
+(:room "208" :flags #x00000b00 :exits
+       ((:dir "N"    :flags #x0000  :closed "4")
+        (:dir "NE"   :flags #x0000  :closed "4")
+        (:dir "E"    :flags #x0000  :closed "4")
+        (:dir "SE"   :flags #x0000  :closed "4")
+        (:dir "S"    :flags #x0000  :closed "4")
+        (:dir "SW"   :flags #x0000  :closed "4")
+        (:dir "W"    :flags #x0000  :dest "190")
+        (:dir "NW"   :flags #x0000  :closed "4")
+        (:dir "UP"   :flags #x0000  :closed "4")
+        (:dir "DOWN" :flags #x0000  :closed "4"))
+    :long "You are in the access area for engine number 1.  The main engine room is to the 
+west.~%"
+    :short "You are in the access area for engine number 1.~%")
+;
+; Load objects
+;
+(:print "~&Loading objects~%")
+(:obj "sword-1" :name sword :flags #x00000000 :value 0
+      :mass 0 :capacity 0 :power 0 :location "8"
+      :adjs (large mottled)
+      :long "A large sword with a strange mottled pattern on its blade.  On the grip is a 
+depiction of what appears to a pair of dice.~%"
+      :short "A large sword."
+      :detail "A large sword with a strange mottled pattern on its blade.  On the grip is a 
+depiction of what appears to a pair of dice.~%")
+(:obj "chalice-1" :name chalice :flags #x00000000 :value 0
+      :adjs (magnificent silver)
+      :mass 0 :capacity 0 :power 0 :location "start"
+      :long "A magnificent silver chalice.~%"
+      :short "A silver chalice."
+      :detail "A magnificent silver chalice with carvings of ancient battles around it.~%")
+(:obj "scabbard-1" :name "scabbard" :adjs (leather) :flags #x00000000 :value 0
+       :mass 0 :capacity 0 :power 0 :location "9"
+    :long "An ingeniously worked leather scabbard which would fit a large sword.~%"
+    :short "A leather scabbard."
+    :detail "An ingeniously worked leather scabbard which would fit a large sword.~%")
+(:obj "shield-1" :name "shield" :flags #x00000000 :value 0
+        :mass 0 :capacity 0 :power 0 :location "6"
+        :adjs (crude bronze)
+    :long "A crude bronze shield embossed to depict forgotten victories.~%"
+    :short "A crude bronze shield."
+    :detail "A crude bronze shield embossed to depict forgotten victories.~%")
+(:obj "stake-1" :name "stake" :adjs (wooden) :flags #x00000000 :value 0
+        :mass 0 :capacity 0 :power 0 :location "16"
+    :long "A piece of wood with one end sharpened and charred where it was fire hardened.~%"
+    :short "A wooden stake."
+    :detail "A piece of wood with one end sharpened and charred where it was fire hardened.~%")
+(:obj "book-1" :name "book" :adjs (vogon) :flags #x00000080
+        :value 0 :mass 0 :capacity 0 :power 0 :location "house-14"
+    :long "A fetid book of Vogon poetry with a health warning on the cover.~%"
+    :short "A book of Vogon poetry."
+    :detail "Unfortunately, I am familiar with this particular Vogon dialect and can 
+translate the poetry.  It reads as follows:
+
+        Oh feddled gruntbuggly
+          thy micturations are to me
+        As plurdled gabbleblotchits
+          on a lurgid bee.
+        Groop I implore thee,
+          my foonting turlingdromes.
+        And hooptiously drangle me
+          with crinkly bindlewurdles,
+        Or I will rend the in the gobberwarts
+          with my blurglecruncheon,
+        see if I don't
+
+          - Prostenic Vogon Jeltz
+
+Don't say that I didn't warn you.~%")
+(:obj "door-1" :name "door" :flags #x00014801 :value 0
+       :mass 0 :capacity 0 :power 0 :location "none"
+    :long "With a valiant effort, the door slowly grinds open.  The hinges are loose and 
+the door has to be lifted as it is moved.~%"
+    :short "The door is reluctant to move, but with some encouragement it is finally 
+persuaded to close.~%"
+    :detail "The door appears to rather rickety and the hinges are loose.  You can see some old
+marks where it was dragged along the floor.~%")
+(:obj "window-1" :name "window" :flags #x00014801 :value 0
+       :mass 0 :capacity 0 :power 0 :location "none"
+    :long "With a great heave, you manage to get the window partly open.  While it is 
+stuck and won't open any further, it looks like you might be able to squeeze 
+through.~%"
+    :short "With a little help, the window comes crashing to a close.~%"
+    :detail "The window looks like it might move given suitable encouragement.  It is one of the
+few places on the house where the paint hasn't pealed.~%")
+(:obj "lid-1" :name "sarcophagi" :flags #x00014801 :value 0
+       :mass 0 :capacity 0 :power 0 :location "none"
+    :long "With much effort, you manage to prop open the lid of the sarcophagi.  Inside, 
+instead of a body or an empty box, you can see some stair descending into the 
+blackness.  A foul stench escapes.  You seem to hear a furtive scampering on 
+the steps as if perhaps something was fleeing the light.~%"
+    :short "As you descend the stairs, the lid comes crashing down behind you cutting off
+the light.~%")
+(:obj "lid-2" :name "lid" :flags #x00014801 :value 0
+       :mass 0 :capacity 0 :power 0 :location "none"
+    :long "With much effort, you manage to prop open the lid.~%"
+    :short "The lid comes crashing down cutting off the smell.~%")
+(:obj "lamp" :name "lamp" :adjs (old) :flags #x00020020 :value 0
+       :mass 0 :capacity 0 :power 999 :location "house-5"
+    :long "A curiously wrought old lamp.  The controls are a little peculiar, but you
+manage to figure them out.~%"
+    :short "An old lamp."
+    :detail "The lamp consists of a wrought iron frame containing a standard battery.  Along
+one side is a lever which appears to turn the lamp on and off.  The handle is in
+the shape of some mythological beast.  The other decorations are unrecognizable.~%")
+(:obj "water-16" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "16"
+    :long "water"
+    :short "water"
+    :detail "The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-15" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "15"
+    :long "water"
+    :short "water"
+    :detail "The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-17" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "17"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-18" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "18"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-19" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "19"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-21" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "21"
+    :long "water"
+    :short "water"
+    :detail "The water is pouring down from above nearly covering the entrance to the 
+cave.  Enough is splashing around that you could probably get a drink.~%")
+(:obj "water-22" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "stream-1"
+    :long "water"
+    :short "water"
+    :detail "The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-23" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "stream-2"
+    :long "water"
+    :short "water"
+    :detail "The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-24" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "stream-3"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-25" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "stream-4"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-26" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "stream-5"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-27" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "27"
+    :long "water"
+    :short "water"
+    :detail "The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-28" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "28"
+    :long "water"
+    :short "water"
+    :detail "The pool is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-29" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "29"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-30" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "30"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "water-31" :name "water" :flags #x00010011 :value 0
+       :mass 0 :capacity 0 :power 0 :location "31"
+    :long "water"
+    :short "water"
+    :detail "The stream is clear and inviting.  You can see a few fish slowly swimming 
+in a deep part.~%")
+(:obj "bread-82" :name "bread" :flags #x00040008 :value 0
+       :mass 0 :capacity 0 :power 0 :location "house-10"
+    :long "Some old, dried bread"
+    :short "Some bread"
+    :detail "The bread is old and dried, but no mold is visible.  You could probably
+eat it with no ill effects.~%")
+
+;
+; End of file
+;
+(:print "~&End of data file~%")
+(:done)
